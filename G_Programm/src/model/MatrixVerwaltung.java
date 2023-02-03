@@ -301,6 +301,9 @@ public class  MatrixVerwaltung{
 
     }
 
+    /*
+    In Benutzung
+     */
     public List<Map<Integer, Matrix>> adjazenzmatrix2(int pos, int pot) throws GraphenException{
         if(!matrixList.isEmpty()){
             if(pos >= 0 && pos < matrixList.size()){
@@ -388,7 +391,7 @@ public class  MatrixVerwaltung{
                     adjazenzmatrix(a, i);
                     for(int k = 0; k < mx.getDimension(); k++)
                         for(int j = 0; j < mx.getDimension(); j++){
-                            if(potenzListe.get(i - 1).get(i).getElement(k, j) == i){
+                            if(potenzListe.get(i).get(i).getElement(k, j) == i){  //todo 1.index passt noch nicht
                                 if(k != j){
                                     System.out.println("Kantenfolge " + i + " existiert von Kante " + (k + 1) + " bis "
                                             + (j + 1));
@@ -408,7 +411,7 @@ public class  MatrixVerwaltung{
 
     }
 
-    public void anzahlKantenfolgenTest(int weg) throws GraphenException{
+    public void anzahlKantenfolgenTest(int weg) throws GraphenException{        //todo noch nicht ganz genau
         if(!matrixList.isEmpty()){
             if(weg > 0 && weg < Math.pow(matrixList.get(0).getDimension(), matrixList.get(0).getDimension())){
                 adjazenzmatrix(0, weg);
@@ -463,7 +466,7 @@ public class  MatrixVerwaltung{
         }
     }
 
-    public void anzahlKantenfolgen(int weg) throws GraphenException{
+    public void anzahlKantenfolgen(int weg) throws GraphenException{        //todo noch nicht ganz genau
         if(!matrixList.isEmpty()){
             if(weg > 0 && weg < Math.pow(matrixList.get(0).getDimension(), matrixList.get(0).getDimension())){
                 adjazenzmatrix(0, weg);

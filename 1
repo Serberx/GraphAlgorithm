@@ -1,0 +1,188 @@
+warning: in the working copy of 'G_Programm/out/production/G_Programm/export/10_er_Potenz_Matrix_1.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'G_Programm/src/export/10_er_Potenz_Matrix_1.csv', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/G_Programm/out/production/G_Programm/export/10_er_Potenz_Matrix_1.csv b/G_Programm/out/production/G_Programm/export/10_er_Potenz_Matrix_1.csv[m
+[1mindex 2c30e4a..8c56b03 100644[m
+[1m--- a/G_Programm/out/production/G_Programm/export/10_er_Potenz_Matrix_1.csv[m
+[1m+++ b/G_Programm/out/production/G_Programm/export/10_er_Potenz_Matrix_1.csv[m
+[36m@@ -4,3 +4,9 @@[m [mMatrix;5;x;5[m
+ 1;0;0;1;0;[m
+ 1;1;1;0;0;[m
+ 0;1;0;0;0;[m
+[32m+[m[32m# 2 Weg Matrix;5;x;5[m
+[32m+[m[32m3;1;1;2;1;[m
+[32m+[m[32m1;3;2;1;0;[m
+[32m+[m[32m1;2;2;1;0;[m
+[32m+[m[32m2;1;1;3;1;[m
+[32m+[m[32m1;0;0;1;1;[m
+[1mdiff --git a/G_Programm/src/export/10_er_Potenz_Matrix_1.csv b/G_Programm/src/export/10_er_Potenz_Matrix_1.csv[m
+[1mindex 2c30e4a..8c56b03 100644[m
+[1m--- a/G_Programm/src/export/10_er_Potenz_Matrix_1.csv[m
+[1m+++ b/G_Programm/src/export/10_er_Potenz_Matrix_1.csv[m
+[36m@@ -4,3 +4,9 @@[m [mMatrix;5;x;5[m
+ 1;0;0;1;0;[m
+ 1;1;1;0;0;[m
+ 0;1;0;0;0;[m
+[32m+[m[32m# 2 Weg Matrix;5;x;5[m
+[32m+[m[32m3;1;1;2;1;[m
+[32m+[m[32m1;3;2;1;0;[m
+[32m+[m[32m1;2;2;1;0;[m
+[32m+[m[32m2;1;1;3;1;[m
+[32m+[m[32m1;0;0;1;1;[m
+[1mdiff --git a/G_Programm/src/test/FinalTests.java b/G_Programm/src/test/FinalTests.java[m
+[1mindex de6d7c6..eb5d27c 100644[m
+[1m--- a/G_Programm/src/test/FinalTests.java[m
+[1m+++ b/G_Programm/src/test/FinalTests.java[m
+[36m@@ -1,2 +1,30 @@[m
+[31m-package test;public class FinalTests {[m
+[32m+[m[32mpackage test;[m
+[32m+[m
+[32m+[m[32mimport enumerations.PersistType;[m
+[32m+[m[32mimport exception.GraphenException;[m
+[32m+[m[32mimport model.Matrix;[m
+[32m+[m[32mimport model.MatrixVerwaltung;[m
+[32m+[m[32mimport org.junit.Test;[m
+[32m+[m[32mimport persister.PersisterException;[m
+[32m+[m
+[32m+[m[32mimport java.io.File;[m
+[32m+[m
+[32m+[m[32mpublic class FinalTests {[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    @Test[m
+[32m+[m[32m    public void testAddMatrix(){[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            Matrix vm = VersuchsMatrix.mehrDimMatrix();[m
+[32m+[m[32m            MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung Matrix 1");[m
+[32m+[m[32m            mv1.add(vm);[m
+[32m+[m[32m            mv1.save(PersistType.CSV, "SU_Graph001");[m
+[32m+[m[32m//            mv1.load(PersistType.CSV, );[m
+[32m+[m[32m        }catch(GraphenException|PersisterException e){[m
+[32m+[m[32m            System.out.println(e.getMessage());[m
+[32m+[m[32m            e.printStackTrace();[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m    }[m
+ }[m
+[1mdiff --git a/G_Programm/src/test/VersuchsMatrix.java b/G_Programm/src/test/VersuchsMatrix.java[m
+[1mindex 88dcfc3..930d3ac 100644[m
+[1m--- a/G_Programm/src/test/VersuchsMatrix.java[m
+[1m+++ b/G_Programm/src/test/VersuchsMatrix.java[m
+[36m@@ -1,2 +1,116 @@[m
+[31m-package test;public class VersuchsMatrix {[m
+[32m+[m[32mpackage test;[m
+[32m+[m
+[32m+[m[32mimport exception.GraphenException;[m
+[32m+[m[32mimport model.Matrix;[m
+[32m+[m[32mimport org.junit.Test;[m
+[32m+[m
+[32m+[m[32mpublic class VersuchsMatrix {[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    public static Matrix mehrDimMatrix(){[m
+[32m+[m[32m        Matrix mx1 = null;[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            mx1 = new Matrix("Mehrdimensionales Matrix", 9);[m
+[32m+[m[32m            mx1.setElement(0,0, 0);[m
+[32m+[m[32m            mx1.setElement(0,1, 1);[m
+[32m+[m[32m            mx1.setElement(0,2, 1);[m
+[32m+[m[32m            mx1.setElement(0,3, 0);[m
+[32m+[m[32m            mx1.setElement(0,4, 0);[m
+[32m+[m[32m            mx1.setElement(0,5, 0);[m
+[32m+[m[32m            mx1.setElement(0,6, 0);[m
+[32m+[m[32m            mx1.setElement(0,7, 0);[m
+[32m+[m[32m            mx1.setElement(0,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(1,0, 1);[m
+[32m+[m[32m            mx1.setElement(1,1, 0);[m
+[32m+[m[32m            mx1.setElement(1,2, 1);[m
+[32m+[m[32m            mx1.setElement(1,3, 1);[m
+[32m+[m[32m            mx1.setElement(1,4, 0);[m
+[32m+[m[32m            mx1.setElement(1,5, 0);[m
+[32m+[m[32m            mx1.setElement(1,6, 0);[m
+[32m+[m[32m            mx1.setElement(1,7, 0);[m
+[32m+[m[32m            mx1.setElement(1,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(2,0, 1);[m
+[32m+[m[32m            mx1.setElement(2,1, 1);[m
+[32m+[m[32m            mx1.setElement(2,2, 0);[m
+[32m+[m[32m            mx1.setElement(2,3, 1);[m
+[32m+[m[32m            mx1.setElement(2,4, 1);[m
+[32m+[m[32m            mx1.setElement(2,5, 1);[m
+[32m+[m[32m            mx1.setElement(2,6, 0);[m
+[32m+[m[32m            mx1.setElement(2,7, 0);[m
+[32m+[m[32m            mx1.setElement(2,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(3,0, 0);[m
+[32m+[m[32m            mx1.setElement(3,1, 1);[m
+[32m+[m[32m            mx1.setElement(3,2, 1);[m
+[32m+[m[32m            mx1.setElement(3,3, 0);[m
+[32m+[m[32m            mx1.setElement(3,4, 0);[m
+[32m+[m[32m            mx1.setElement(3,5, 0);[m
+[32m+[m[32m            mx1.setElement(3,6, 0);[m
+[32m+[m[32m            mx1.setElement(3,7, 0);[m
+[32m+[m[32m            mx1.setElement(3,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(4,0, 0);[m
+[32m+[m[32m            mx1.setElement(4,1, 0);[m
+[32m+[m[32m            mx1.setElement(4,2, 1);[m
+[32m+[m[32m            mx1.setElement(4,3, 0);[m
+[32m+[m[32m            mx1.setElement(4,4, 0);[m
+[32m+[m[32m            mx1.setElement(4,5, 1);[m
+[32m+[m[32m            mx1.setElement(4,6, 0);[m
+[32m+[m[32m            mx1.setElement(4,7, 0);[m
+[32m+[m[32m            mx1.setElement(4,8, 0);[m
+[32m+[m[32m/////[m
+[32m+[m[32m            mx1.setElement(5,0, 0);[m
+[32m+[m[32m            mx1.setElement(5,1, 0);[m
+[32m+[m[32m            mx1.setElement(5,2, 1);[m
+[32m+[m[32m            mx1.setElement(5,3, 0);[m
+[32m+[m[32m            mx1.setElement(5,4, 1);[m
+[32m+[m[32m            mx1.setElement(5,5, 0);[m
+[32m+[m[32m            mx1.setElement(5,6, 1);[m
+[32m+[m[32m            mx1.setElement(5,7, 0);[m
+[32m+[m[32m            mx1.setElement(5,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(6,0, 0);[m
+[32m+[m[32m            mx1.setElement(6,1, 0);[m
+[32m+[m[32m            mx1.setElement(6,2, 0);[m
+[32m+[m[32m            mx1.setElement(6,3, 0);[m
+[32m+[m[32m            mx1.setElement(6,4, 0);[m
+[32m+[m[32m            mx1.setElement(6,5, 1);[m
+[32m+[m[32m            mx1.setElement(6,6, 0);[m
+[32m+[m[32m            mx1.setElement(6,7, 1);[m
+[32m+[m[32m            mx1.setElement(6,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(7,0, 0);[m
+[32m+[m[32m            mx1.setElement(7,1, 0);[m
+[32m+[m[32m            mx1.setElement(7,2, 0);[m
+[32m+[m[32m            mx1.setElement(7,3, 0);[m
+[32m+[m[32m            mx1.setElement(7,4, 0);[m
+[32m+[m[32m            mx1.setElement(7,5, 0);[m
+[32m+[m[32m            mx1.setElement(7,6, 1);[m
+[32m+[m[32m            mx1.setElement(7,7, 0);[m
+[32m+[m[32m            mx1.setElement(7,8, 0);[m
+[32m+[m
+[32m+[m[32m            mx1.setElement(8,0, 0);[m
+[32m+[m[32m            mx1.setElement(8,1, 0);[m
+[32m+[m[32m            mx1.setElement(8,2, 0);[m
+[32m+[m[32m            mx1.setElement(8,3, 0);[m
+[32m+[m[32m            mx1.setElement(8,4, 0);[m
+[32m+[m[32m            mx1.setElement(8,5, 0);[m
+[32m+[m[32m            mx1.setElement(8,6, 1);[m
+[32m+[m[32m            mx1.setElement(8,7, 0);[m
+[32m+[m[32m            mx1.setElement(8,8, 0);[m
+[32m+[m
+[32m+[m[32m            System.out.println(mx1.toStringCSVMatrix());[m
+[32m+[m
+[32m+[m[32m        }catch(GraphenException e){[m
+[32m+[m[32m            System.out.println(e.getMessage());[m
+[32m+[m[32m            e.printStackTrace();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return mx1;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m//    public static void main(String[] args) {[m
+[32m+[m[32m//        VersuchsMatrix.mehrDimMatrix();[m
+[32m+[m[32m//    }[m
+ }[m

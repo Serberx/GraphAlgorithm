@@ -1355,21 +1355,21 @@ public class TestLoadCSV{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
             //            mv1.anzahlKantenfolgen(2);
-            //            mv1.adjazenzmatrix(0,6);
+                        mv1.adjazenzmatrix(0,6);
             //            mv1.anzahlKantenfolgenVonKzuK2();
             //            mv1.anzahlKantenfolgen(3);
-            //            mv1.distanzMatrix3();
+                        mv1.distanzMatrix3();
             mv1.distanzMatrix3();
             //            System.out.println(mv1.getDistanzListe());
             System.out.println(mv1.toString());
             //            System.out.println(mv1.getDistanzListe().get(0).get(2));
-            //            int a = 3; /*mv1.getDistanzListe().get(0).size();*/
-            //            System.out.println(mv1.getDistanzListe().get(0).get(a).toStringCSVMatrix());
+                        int a = 3; /*mv1.getDistanzListe().get(0).size();*/
+                        System.out.println(mv1.getDistanzListe().get(0).get(a).toStringCSVMatrix());
             //            System.out.println(mv1.getDistanzListe().get(0).get(mv1.getDistanzListenGroesse()));
 
             //            System.out.println(mv1.adjazenzmatrix2(0,3));
             //            System.out.println(mv1.toString2());
-            //            mv1.anzahlKantenfolgenVonKzuK2();
+                        mv1.anzahlKantenfolgenVonKzuK2();
             //            System.out.println(mv1.getMapListe().get(0).get(4));
             exceptionThrwon = true;
         }catch(GraphenException e){
