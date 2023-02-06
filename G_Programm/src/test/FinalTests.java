@@ -9,6 +9,7 @@ import org.junit.Test;
 import persister.PersisterException;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class FinalTests {
 
@@ -116,9 +117,13 @@ public class FinalTests {
 //            System.out.println(mv1.radius());
 //            System.out.println(mv1.durchmesser());
 //            System.out.println(mv1.getExzentritaetenList());
-            mv1.getZentrum();
+//            mv1.getZentrum();
+            mv1.radius(true);
 //            mv1.radius2(true);
           mv1.radius2(true);
+          mv1.getZentrum();
+            System.out.println(mv1.getExzentritaetVomKnoten(false, 2));
+//            System.out.println(mv1.knotenGrad(mv1.getMatrix(0)).toString());
         }catch(GraphenException|PersisterException e){
             System.out.println(e.getMessage());
             e.printStackTrace();

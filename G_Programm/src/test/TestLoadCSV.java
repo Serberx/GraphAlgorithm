@@ -757,7 +757,7 @@ public class TestLoadCSV{
             Matrix mx1 = new Matrix("Test", 5);
 
             mv1.load(PersistType.CSV, "src/export/graph8.csv");
-            mv1.knotenGrad(mv1.getMatrix(0));
+            mv1.knotenGrad(true, mv1.getMatrix(0));
             //            System.out.println(mv1.toString());
             exceptionThrwon = true;
         }catch(GraphenException e){
@@ -781,7 +781,7 @@ public class TestLoadCSV{
             Matrix mx1 = new Matrix("Test", 5);
 
             mv1.load(PersistType.CSV, "src/export/graph8.csv");
-            mv1.knotenGrad(null);
+            mv1.knotenGrad(true,null);
             //            System.out.println(mv1.toString());
         }catch(GraphenException e){
             exceptionThrwon = true;
@@ -970,7 +970,7 @@ public class TestLoadCSV{
 
 
             mv1.load(PersistType.CSV, "src/export/graph11.csv");
-            mv1.knotenGradLineSelect(1);
+            mv1.knotenGradLineSelect(true, 1);
             System.out.println(mv1.toString());
         }catch(GraphenException e){
             exceptionThrwon = true;
@@ -994,7 +994,7 @@ public class TestLoadCSV{
             //            System.out.println(mv1.adjazenzmatrixBack(1,3));
             mv1.adjazenzmatrix(1, 3);
 
-            mv1.knotenGradLineSelect(2);
+            mv1.knotenGradLineSelect(true, 2);
             //            mv1.save(PersistType.CSV, "Adjaz_graph12");
             System.out.println(mv1.toString());
         }catch(GraphenException e){
@@ -1258,7 +1258,7 @@ public class TestLoadCSV{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
             //            mv1.adjazenzmatrix2(0,3);
-            mv1.knotenGradLineSelect(1);
+            mv1.knotenGradLineSelect(true, 1);
             mv1.adjazenzmatrix(0, 2);
             //            mv1.anzahlKantenfolgenVonKzuK(1,2,3);
             //            System.out.println(mv1.getMapListe());

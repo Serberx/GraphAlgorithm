@@ -140,10 +140,7 @@ public class Matrix implements Serializable, MatrixOperationen{
         }
     }
 
-    @Override
-    public void integerElementeHinzufuegen(int wert){
 
-    }
 
     public int getElement(int i, int j) throws GraphenException{
         try{

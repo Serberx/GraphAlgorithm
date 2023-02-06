@@ -79,7 +79,7 @@ public class PersisterCSV /*PersisterCSV<S extends Iterable<?>>*/ implements Per
                 try{
                     String[] lineArray = line.split(Constants.COMMA);
                     if(!lineArray[0].isBlank()){
-                        if(!Character.isDigit(lineArray[0].charAt(0)) && Character.isDigit(lineArray[1].charAt(0))){
+                        if(!Character.isDigit(lineArray[0].charAt(0)) && lineArray.length == 1 || !Character.isDigit(lineArray[0].charAt(0)) && Character.isDigit(lineArray[1].charAt(0))){
                             if(!firstRead){
                                 tempDimenson = Integer.parseInt(lineArray[1]);
                                 firstRead = true;
@@ -94,7 +94,7 @@ public class PersisterCSV /*PersisterCSV<S extends Iterable<?>>*/ implements Per
 
 
                         }else{
-                            if(Character.isDigit(lineArray[0].charAt(0)) && Character.isDigit(lineArray[1].charAt(0))){
+                            if(Character.isDigit(lineArray[0].charAt(0)) && lineArray.length == 1 || Character.isDigit(lineArray[0].charAt(0)) && Character.isDigit(lineArray[1].charAt(0))){
                                 if(tempZaehler <= -1){
                                     if(datenArray.size() == 0){
                                         tempZaehler = lineArray.length;

@@ -128,7 +128,7 @@ public class MatrixVerwaltung {
         return false;
     }
 
-    public int[] knotenGrad(Matrix matrix) throws GraphenException {
+    public int[] knotenGrad(boolean print, Matrix matrix) throws GraphenException {
         int[] tempGrad;
         //        StringBuilder builder = new StringBuilder();
         if (matrix != null) {
@@ -141,7 +141,9 @@ public class MatrixVerwaltung {
                     }
                     tempGrad[i] = tempZeilenWert;
                     tempZeilenWert = 0;
-                    //                    System.out.println("Zeile " + (i + 1) + ": d(v)= " + tempGrad[i]); //in use
+                    if(print) {
+                        System.out.println("Zeile "+(i+1)+": d(v)= "+tempGrad[i]); //in use
+                    }
                     //                    builder.append("Zeile: ").append(i+1).append(": d(v)= ").append
                     //                    (tempGrad[i]).toString();
                 }
@@ -163,7 +165,7 @@ public class MatrixVerwaltung {
                 tempGrad = new int[mx.getDimension()];
                 int tempZeilenWert = 0;
                 if (pruefeMatrix(mx)) {
-                    int[] oneMatrix = knotenGrad(mx);
+                    int[] oneMatrix = knotenGrad(false, mx);
                     //                    builder.append("Matrix: ").append(matrix).toString();
                     System.out.println("Matrix: "+matrix++);
                     for(int i = 0; i < oneMatrix.length; i++){
@@ -200,7 +202,7 @@ public class MatrixVerwaltung {
                 tempGrad = new int[mx.getDimension()];
                 int tempZeilenWert = 0;
                 if (pruefeMatrix(mx)) {
-                    int[] oneMatrix = knotenGrad(mx);
+                    int[] oneMatrix = knotenGrad(false, mx);
                     //                    builder.append("Matrix: ").append(matrix).toString();
                     System.out.println("Matrix at position: "+pos);
                     for(int i = 0; i < oneMatrix.length; i++){
@@ -230,17 +232,20 @@ public class MatrixVerwaltung {
     }
 
 
-    public int[] knotenGradLineSelect(int line) throws GraphenException {  //TODO Schlingen in die Berechnung
+    public int[] knotenGradLineSelect(boolean print, int line) throws GraphenException {  //TODO Schlingen in die Berechnung
         // einbeziehen!
         int[] tempDegreeList = new int[0];
         if (line >= 1) {
             int zaehler = 0;
             if (!matrixList.isEmpty()) {
+                tempDegreeList = new int[matrixList.size()];
                 for(Matrix mx : matrixList){
-                    tempDegreeList = new int[matrixList.size()];
-                    int[] oneMatrixDegree = knotenGrad(mx);
+
+                    int[] oneMatrixDegree = knotenGrad(false, mx);
                     if (line <= mx.getDimension()) {
-                        System.out.println("Matrix: "+(zaehler+1)+", Line: "+line+" d(v)="+oneMatrixDegree[line-1]);
+                        if(print) {
+                            System.out.println("Matrix: "+(zaehler+1)+", Line: "+line+" d(v)="+oneMatrixDegree[line-1]);
+                        }
                         tempDegreeList[zaehler] = oneMatrixDegree[line-1];
                     }
                     zaehler++;
@@ -826,33 +831,40 @@ public class MatrixVerwaltung {
             distanzMatrix3();
             if (!distanzListe.isEmpty()) {  //Zum Testen wurde in dieser Methode die distanzMatrix3() abgewählt und die
                 // distanzListe erzeugt, sonst NullPointerException!
-                for(int i = 1; i < matrixList.get(0).getDimension()+1; i++){
-                    for(int j = 1; j < matrixList.get(0).getDimension()+1; j++){
-                        if (i != j) {
-                            if (distanzVonKzuK(i, j) > tempEx) {
-                                tempEx = distanzVonKzuK(i, j);
-                                tempExAusgabe = distanzVonKzuK(i, j);
-                                tempKnotenj = j;
-                                tempKnoteni = i;
-                                mx1.setElement(i-1, j-1, 0);
+
+                if(matrixList.get(0).getDimension() > 1 ){
+                    for(int i = 1; i < matrixList.get(0).getDimension()+1; i++){
+                        for(int j = 1; j < matrixList.get(0).getDimension()+1; j++){
+                            if (i != j) {
+                                if (distanzVonKzuK(i, j) > tempEx) {
+                                    tempEx = distanzVonKzuK(i, j);
+                                    tempExAusgabe = distanzVonKzuK(i, j);
+                                    tempKnotenj = j;
+                                    tempKnoteni = i;
+                                    mx1.setElement(i-1, j-1, 0);
+                                } else {
+                                    mx1.setElement(i-1, j-1, 0);
+                                }
                             } else {
                                 mx1.setElement(i-1, j-1, 0);
                             }
-                        } else {
-                            mx1.setElement(i-1, j-1, 0);
                         }
+                        mx1.setElement(tempKnoteni-1, tempKnotenj-1, tempEx);
+                        //                    System.out.println("Exzentrität vom Knoten "+i+" ist: "+tempEx+" | Vom
+                        //                    Knoten "+i+" zu "+tempKnotenj );
+                        //                    System.out.println("ex(" + tempKnoteni + ") = " + tempEx + " | [" +
+                        //                    tempKnoteni + ", " + tempKnotenj + "]");  //In Verwendung
+                        //                    tempKnotenj = 0;
+                        tempEx = 0;
+                        //                    builder.append("Exzentrität von Knoten "+i+" zu "+tempKnoten+ " ist:
+                        //                    "+tempEx).toString();
                     }
-                    mx1.setElement(tempKnoteni-1, tempKnotenj-1, tempEx);
-                    //                    System.out.println("Exzentrität vom Knoten "+i+" ist: "+tempEx+" | Vom
-                    //                    Knoten "+i+" zu "+tempKnotenj );
-                    //                    System.out.println("ex(" + tempKnoteni + ") = " + tempEx + " | [" +
-                    //                    tempKnoteni + ", " + tempKnotenj + "]");  //In Verwendung
-                    //                    tempKnotenj = 0;
-                    tempEx = 0;
-                    //                    builder.append("Exzentrität von Knoten "+i+" zu "+tempKnoten+ " ist:
-                    //                    "+tempEx).toString();
+                    exzentritaetenList.add(mx1);
+                }else{
+                    throw new GraphenException("exzentritäten | Exzentrität von Matix ist unendlich!");
                 }
-                exzentritaetenList.add(mx1);
+
+
             } else {
                 throw new GraphenException("exzentritäten | Empty distanzList!");
             }
