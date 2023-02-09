@@ -3,7 +3,6 @@ package test;
 import enumerations.PersistType;
 import exception.GraphenException;
 import model.MatrixVerwaltung;
-import model.PersisterCSV;
 import model.Matrix;
 import org.junit.Test;
 import persister.PersisterException;
@@ -213,7 +212,7 @@ public class TestPersisterCSV{
             //            System.out.println( mv1.adjazenzmatrix2(0,5));
             List<Map<Integer, Matrix>> adjMat = new ArrayList<>();
             mv1.adjazenzmatrix2(0,2);
-            adjMat = (mv1.getMapListe());
+            adjMat = (mv1.getPotenzMapListe());
             //persistAdjazenzMatrix wurde nur auf die schnelle Programmiert! Noch nicht ausgetestet!!
             mv1.persistadjazenzMatrixMap(adjMat, PersistType.CSV, "10_er_Potenz_Matrix_1");
             //            System.out.println(mv1.toString());

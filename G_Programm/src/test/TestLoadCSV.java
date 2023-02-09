@@ -7,7 +7,6 @@ import model.MatrixVerwaltung;
 import org.junit.Test;
 import persister.PersisterException;
 
-import java.security.PublicKey;
 import java.util.Locale;
 
 public class TestLoadCSV{
@@ -1151,7 +1150,7 @@ public class TestLoadCSV{
 
             //            System.out.println(mv1.toString());
             System.out.println(mv1.toString());
-            mv1.persistadjazenzMatrixMap(mv1.getMapListe(), PersistType.CSV, "Test_Demo2"); //Nicht fetig ausgetestet
+            mv1.persistadjazenzMatrixMap(mv1.getPotenzMapListe(), PersistType.CSV, "Test_Demo2"); //Nicht fetig ausgetestet
 
             //            mv1.persistadjazenzMatrixMap(mv1.getMapListe(), PersistType.CSV, "Test_Demeo_M"); //Nicht
             //            fetig ausgetestet
@@ -1262,7 +1261,7 @@ public class TestLoadCSV{
             mv1.adjazenzmatrix(0, 2);
             //            mv1.anzahlKantenfolgenVonKzuK(1,2,3);
             //            System.out.println(mv1.getMapListe());
-            System.out.println(mv1.getMapListe().get(0));
+            System.out.println(mv1.getPotenzMapListe().get(0));
             //            System.out.println(mv1.toString());
 
             //            System.out.println(mv1.toString());
@@ -1297,7 +1296,7 @@ public class TestLoadCSV{
             //            System.out.println(mv1.getMapListe().get(0).get(2));
             //            System.out.println(mv1.getMapListe().get(0).get(3));
             //            System.out.println(mv1.getMapListe().get(0).get(4));
-            System.out.println(mv1.getMapListe().get(0).get(3));
+            System.out.println(mv1.getPotenzMapListe().get(0).get(3));
             System.out.println(mv1.toString());
         }catch(GraphenException e){
             exceptionThrwon = true;
