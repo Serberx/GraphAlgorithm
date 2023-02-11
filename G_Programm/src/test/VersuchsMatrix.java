@@ -110,7 +110,7 @@ public class VersuchsMatrix {
         return mx1;
     }
 
-//    public static void main(String[] args) {
-//        VersuchsMatrix.mehrDimMatrix();
-//    }
+    public static void main(String[] args) {
+        VersuchsMatrix.mehrDimMatrix();
+    }
 }

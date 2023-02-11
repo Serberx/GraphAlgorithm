@@ -193,6 +193,7 @@ public class FinalTests {
 //            mv1.adjazenzmatrix2(0, mv1.getMatrixList().get(0).getDimension());
 
             System.out.println(mv1.getWegmatrix().toStringCSVMatrix());
+//            System.out.println(mv1.getWegmatrix());
         }catch(GraphenException e){
             System.out.println(e.getMessage()   );
             e.printStackTrace();

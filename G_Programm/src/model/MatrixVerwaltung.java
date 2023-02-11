@@ -7,6 +7,7 @@ import persister.Persistable;
 import persister.PersisterException;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /*
@@ -1176,7 +1177,7 @@ public class MatrixVerwaltung {
             Matrix einMatrix = new Matrix("Weg Matrix", matrixList.get(0).getDimension());
             Map<Integer, Matrix> tempWegMatrix = new HashMap<>();
             List<Map<Integer, Matrix>> adjaWegMatrix = adjazenzmatrix2(0, matrixList.get(0).getDimension());
-            Matrix mx1 = new Matrix("Weg"+tempZaehler, matrixList.get(0).getDimension());
+            //            Matrix mx1 = new Matrix("Weg"+tempZaehler, matrixList.get(0).getDimension());
             for(int i = 0; i < matrixList.get(0).getDimension(); i++){
                 for(int j = 0; j < matrixList.get(0).getDimension(); j++){
                     if (i == j) {
@@ -1184,17 +1185,19 @@ public class MatrixVerwaltung {
                     }
                 }
             }
-            tempWegMatrix.put(tempZaehler,einMatrix);   //initialisieren der Hauptdiagonale
+            tempWegMatrix.put(tempZaehler, einMatrix);   //initialisieren der Hauptdiagonale
+            ArrayList<Matrix> mx2 = new ArrayList<>(List.of(einMatrix));
 
 
-            while(tempZaehler != matrixList.get(0).getDimension()) {
+            while (tempZaehler != matrixList.get(0).getDimension()) {
 
                 for(int k = 0; k < matrixList.get(0).getDimension(); k++){
                     for(int p = 0; p < matrixList.get(0).getDimension(); p++){
                         if (k != p) {
-                            if (adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p) != 0) {
+                            //                            if (adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p) != 0) {
+                            if (this.adjaMatrix.get(tempZaehler).getElement(k, p) != 0) {
                                 //                            tempWegMatrix.put(tempZaehler, adjaWegMatrix.get(0).get(tempZaehler).getElement(k,p));
-//                                einMatrix.setElement(k, p, adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p));
+                                //                                einMatrix.setElement(k, p, adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p));
                                 einMatrix.setElement(k, p, 1);
                             }
                         }
@@ -1202,17 +1205,75 @@ public class MatrixVerwaltung {
                     }
                 }
 
-
-                            tempWegMatrix.put(tempZaehler,einMatrix);  /*einMatrix.setElement(i, j, 1);*/
-
-
-
+                //                tempWegMatrix.put(tempZaehler, einMatrix);  /*einMatrix.setElement(i, j, 1);*/
+                //                mx2.add(0, einMatrix);
 
                 tempZaehler++;
             }
 
-            return tempWegMatrix.get(matrixList.get(0).getDimension()-1);
+           /* tempZaehler = 0;
 
+            int[] zeile = new int[matrixList.get(0).getDimension()];
+            ArrayList<int[]> aList = new ArrayList<>();
+            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
+                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
+                    if (einMatrix.getElement(i, j) == 1) {
+                        zeile[j] = j;
+
+                    }
+                }
+                aList.add(zeile);
+                zeile = new int[matrixList.get(0).getDimension()];
+            }
+
+            int[] entdeckt = new int[matrixList.get(0).getDimension()];
+            int[] fertiggestellt = new int[matrixList.get(0).getDimension()];
+
+            int z = 1;
+            int z2 = 0;
+            for(int a = 0; a < matrixList.get(0).getDimension(); a++){
+                for(int b = 0; b > matrixList.get(0).getDimension(); b--){
+                    if (a != b) {
+                        if (Arrays.equals(aList.get(z2), aList.get(b-1))) {
+                            z++;
+                        }
+                        z2++;
+                    }
+                }
+            }*/
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+           /* int anz = 0;
+            int[] ab = new int[matrixList.get(0).getDimension()];
+            for(int a = 0; a < matrixList.get(0).getDimension(); a++){
+                for(int b = 0; b < matrixList.get(0).getDimension(); b++){
+                    if (Arrays.equals(aList.get(a), aList.get(b))) {
+                        anz++;
+
+                    }
+                }
+                System.out.println(anz);
+                ab[a] = anz;
+                anz = 0;
+            }
+
+            int zah = 0;
+            int zah2 = 0;
+            for(int g = 0; g < ab.length; g++){
+                for(int f = 0; f < ab.length; f++){
+                    if (ab[g] == f) {
+
+                        zah2++;
+                    }
+                }
+                System.out.println(zah2);
+            }
+
+            ////            return tempWegMatrix.get(matrixList.get(0).getDimension()-1);
+            //            return mx2.get(0);
+            ////////////////////////////////////////////////////////////////////////////////*/
+            return einMatrix;
         } else {
             throw new GraphenException("getWegmatrix | Empty List!");
         }
