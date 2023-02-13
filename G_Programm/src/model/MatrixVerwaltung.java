@@ -19,6 +19,7 @@ public class MatrixVerwaltung {
     private String name;
     private List<Matrix> matrixList;
     private Map<Integer, Matrix> adjaMatrix;
+    private Matrix kompMatrix;
     private Map<PersistType, Persistable<List<Matrix>>> persisterMap;       ////////// 1    Context class
     //    private Persistable<List<Matrix>> matrixPersister;
     private List<Map<Integer, Matrix>> potenzListe;
@@ -1210,74 +1211,44 @@ public class MatrixVerwaltung {
 
                 tempZaehler++;
             }
-
-           /* tempZaehler = 0;
-
-            int[] zeile = new int[matrixList.get(0).getDimension()];
-            ArrayList<int[]> aList = new ArrayList<>();
-            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                    if (einMatrix.getElement(i, j) == 1) {
-                        zeile[j] = j;
-
-                    }
-                }
-                aList.add(zeile);
-                zeile = new int[matrixList.get(0).getDimension()];
-            }
-
-            int[] entdeckt = new int[matrixList.get(0).getDimension()];
-            int[] fertiggestellt = new int[matrixList.get(0).getDimension()];
-
-            int z = 1;
-            int z2 = 0;
-            for(int a = 0; a < matrixList.get(0).getDimension(); a++){
-                for(int b = 0; b > matrixList.get(0).getDimension(); b--){
-                    if (a != b) {
-                        if (Arrays.equals(aList.get(z2), aList.get(b-1))) {
-                            z++;
-                        }
-                        z2++;
-                    }
-                }
-            }*/
-
-            ////////////////////////////////////////////////////////////////////////////////
-
-           /* int anz = 0;
-            int[] ab = new int[matrixList.get(0).getDimension()];
-            for(int a = 0; a < matrixList.get(0).getDimension(); a++){
-                for(int b = 0; b < matrixList.get(0).getDimension(); b++){
-                    if (Arrays.equals(aList.get(a), aList.get(b))) {
-                        anz++;
-
-                    }
-                }
-                System.out.println(anz);
-                ab[a] = anz;
-                anz = 0;
-            }
-
-            int zah = 0;
-            int zah2 = 0;
-            for(int g = 0; g < ab.length; g++){
-                for(int f = 0; f < ab.length; f++){
-                    if (ab[g] == f) {
-
-                        zah2++;
-                    }
-                }
-                System.out.println(zah2);
-            }
-
-            ////            return tempWegMatrix.get(matrixList.get(0).getDimension()-1);
-            //            return mx2.get(0);
-            ////////////////////////////////////////////////////////////////////////////////*/
+            kompMatrix = einMatrix;
             return einMatrix;
         } else {
             throw new GraphenException("getWegmatrix | Empty List!");
         }
     }
+
+    public int getComponents() throws GraphenException {
+        if (!matrixList.isEmpty()) {
+            if (kompMatrix != null) {
+                Matrix wegMatrix = kompMatrix;
+                int zeilenLauf = 0;
+
+                List<String> zeilenList = new ArrayList<>();
+                Set<String> zeilenSet = new TreeSet<>();
+                String zeileOne = "";
+                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
+                    int[] zeile = new int[matrixList.get(0).getDimension()];
+                    for(int j = 0; j < matrixList.get(0).getDimension(); j++){
+                        zeile[j] = kompMatrix.getElement(i, j);
+                        zeileOne += String.valueOf(kompMatrix.getElement(i, j));
+                    }
+                    zeilenList.add(zeileOne);
+                    zeileOne = "";
+
+                }
+                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
+                    zeilenSet.add(zeilenList.get(i));
+                }
+                return zeilenSet.size();
+            } else {
+                throw new GraphenException("getComponents | Wegmatrix is still not calculated!");
+            }
+        } else {
+            throw new GraphenException("getWegmatrix | Empty List!");
+        }
+    }
+
 
     public void load(PersistType type, String filename) throws GraphenException, PersisterException {
         if (filename != null && type != null) {
