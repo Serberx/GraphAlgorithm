@@ -780,7 +780,7 @@ public class TestLoadCSV{
             Matrix mx1 = new Matrix("Test", 5);
 
             mv1.load(PersistType.CSV, "src/export/graph8.csv");
-            mv1.knotenGrad(true,null);
+            mv1.knotenGrad(true, null);
             //            System.out.println(mv1.toString());
         }catch(GraphenException e){
             exceptionThrwon = true;
@@ -953,7 +953,7 @@ public class TestLoadCSV{
             System.out.println(e.getMessage());
             e.printStackTrace();
         }catch(PersisterException e){
-//            exceptionThrwon = true;
+            //            exceptionThrwon = true;
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -1354,21 +1354,21 @@ public class TestLoadCSV{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
             //            mv1.anzahlKantenfolgen(2);
-                        mv1.adjazenzmatrix(0,6);
+            mv1.adjazenzmatrix(0, 6);
             //            mv1.anzahlKantenfolgenVonKzuK2();
             //            mv1.anzahlKantenfolgen(3);
-                        mv1.distanzMatrix3();
+            mv1.distanzMatrix3();
             mv1.distanzMatrix3();
             //            System.out.println(mv1.getDistanzListe());
             System.out.println(mv1.toString());
             //            System.out.println(mv1.getDistanzListe().get(0).get(2));
-                        int a = 3; /*mv1.getDistanzListe().get(0).size();*/
-                        System.out.println(mv1.getDistanzListe().get(0).get(a).toStringCSVMatrix());
+            int a = 3; /*mv1.getDistanzListe().get(0).size();*/
+            System.out.println(mv1.getDistanzListe().get(0).get(a).toStringCSVMatrix());
             //            System.out.println(mv1.getDistanzListe().get(0).get(mv1.getDistanzListenGroesse()));
 
             //            System.out.println(mv1.adjazenzmatrix2(0,3));
             //            System.out.println(mv1.toString2());
-//                        mv1.anzahlKantenfolgenVonKzuK2();
+            //                        mv1.anzahlKantenfolgenVonKzuK2();
             //            System.out.println(mv1.getMapListe().get(0).get(4));
             exceptionThrwon = true;
         }catch(GraphenException e){
@@ -1390,16 +1390,16 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 1 zu 2: " + mv1.distanzVonKzuK(1, 2));
-            System.out.println("Distanz von 1 zu 3: " + mv1.distanzVonKzuK(1, 3));
-            System.out.println("Distanz von 5 zu 3: " + mv1.distanzVonKzuK(5, 3));
-            System.out.println("Distanz von 1 zu 4: " + mv1.distanzVonKzuK(1, 4));
-            System.out.println("Distanz von 1 zu 5: " + mv1.distanzVonKzuK(1, 5));
-            System.out.println("Distanz von 2 zu 1: " + mv1.distanzVonKzuK(2, 1));
-            System.out.println("Distanz von 2 zu 3: " + mv1.distanzVonKzuK(2, 3));
-            System.out.println("Distanz von 4 zu 3: " + mv1.distanzVonKzuK(4, 3));
-            System.out.println("Distanz von 2 zu 4: " + mv1.distanzVonKzuK(2, 4));
-            System.out.println("Distanz von 2 zu 5: " + mv1.distanzVonKzuK(2, 5));
+            System.out.println("Distanz von 1 zu 2: "+mv1.distanzVonKzuK(1, 2));
+            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1, 3));
+            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5, 3));
+            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1, 4));
+            System.out.println("Distanz von 1 zu 5: "+mv1.distanzVonKzuK(1, 5));
+            System.out.println("Distanz von 2 zu 1: "+mv1.distanzVonKzuK(2, 1));
+            System.out.println("Distanz von 2 zu 3: "+mv1.distanzVonKzuK(2, 3));
+            System.out.println("Distanz von 4 zu 3: "+mv1.distanzVonKzuK(4, 3));
+            System.out.println("Distanz von 2 zu 4: "+mv1.distanzVonKzuK(2, 4));
+            System.out.println("Distanz von 2 zu 5: "+mv1.distanzVonKzuK(2, 5));
 
             exceptionThrwon = true;
         }catch(GraphenException e){
@@ -1422,16 +1422,16 @@ public class TestLoadCSV{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             //            mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten
             //            Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 1 zu 2: " + mv1.distanzVonKzuK(1, 2));
-            System.out.println("Distanz von 1 zu 3: " + mv1.distanzVonKzuK(1, 3));
-            System.out.println("Distanz von 5 zu 3: " + mv1.distanzVonKzuK(5, 3));
-            System.out.println("Distanz von 1 zu 4: " + mv1.distanzVonKzuK(1, 4));
-            System.out.println("Distanz von 1 zu 5: " + mv1.distanzVonKzuK(1, 5));
-            System.out.println("Distanz von 2 zu 1: " + mv1.distanzVonKzuK(2, 1));
-            System.out.println("Distanz von 2 zu 3: " + mv1.distanzVonKzuK(2, 3));
-            System.out.println("Distanz von 4 zu 3: " + mv1.distanzVonKzuK(4, 3));
-            System.out.println("Distanz von 2 zu 4: " + mv1.distanzVonKzuK(2, 4));
-            System.out.println("Distanz von 2 zu 5: " + mv1.distanzVonKzuK(2, 5));
+            System.out.println("Distanz von 1 zu 2: "+mv1.distanzVonKzuK(1, 2));
+            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1, 3));
+            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5, 3));
+            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1, 4));
+            System.out.println("Distanz von 1 zu 5: "+mv1.distanzVonKzuK(1, 5));
+            System.out.println("Distanz von 2 zu 1: "+mv1.distanzVonKzuK(2, 1));
+            System.out.println("Distanz von 2 zu 3: "+mv1.distanzVonKzuK(2, 3));
+            System.out.println("Distanz von 4 zu 3: "+mv1.distanzVonKzuK(4, 3));
+            System.out.println("Distanz von 2 zu 4: "+mv1.distanzVonKzuK(2, 4));
+            System.out.println("Distanz von 2 zu 5: "+mv1.distanzVonKzuK(2, 5));
 
 
         }catch(GraphenException e){
@@ -1453,7 +1453,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 1 zu 2: " + mv1.distanzVonKzuK(0, 2));
+            System.out.println("Distanz von 1 zu 2: "+mv1.distanzVonKzuK(0, 2));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1484,7 +1484,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 1 zu 2: " + mv1.distanzVonKzuK(1, 0));
+            System.out.println("Distanz von 1 zu 2: "+mv1.distanzVonKzuK(1, 0));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1515,7 +1515,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von " + mv1.getMatrixList().get(0).getDimension() + " zu 3: " + mv1.distanzVonKzuK(mv1.getMatrixList().get(0).getDimension() + 1, 3));
+            System.out.println("Distanz von "+mv1.getMatrixList().get(0).getDimension()+" zu 3: "+mv1.distanzVonKzuK(mv1.getMatrixList().get(0).getDimension()+1, 3));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1546,7 +1546,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 3 zu " + mv1.getMatrixList().get(0).getDimension() + ": " + mv1.distanzVonKzuK(3, mv1.getMatrixList().get(0).getDimension() + 1));
+            System.out.println("Distanz von 3 zu "+mv1.getMatrixList().get(0).getDimension()+": "+mv1.distanzVonKzuK(3, mv1.getMatrixList().get(0).getDimension()+1));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1577,7 +1577,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 3 zu 3: " + mv1.distanzVonKzuK(3, 3));
+            System.out.println("Distanz von 3 zu 3: "+mv1.distanzVonKzuK(3, 3));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1608,7 +1608,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 5 zu 3: " + mv1.distanzVonKzuK(5, 3));
+            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5, 3));
             System.out.println(mv1.distanzVonKzuK(5, 3));
 
 
@@ -1633,7 +1633,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv"); //laden der Erzeugten Potenzmatrizen funktioniert!
-            System.out.println("Distanz von 5 zu 3: " + mv1.distanzVonKzuK(5, 3));
+            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5, 3));
             //            System.out.println("Distanz von 1 zu 3: "+mv1.distanzVonKzuK(1,3));
             //            System.out.println("Distanz von 5 zu 3: "+mv1.distanzVonKzuK(5,3));
             //            System.out.println("Distanz von 1 zu 4: "+mv1.distanzVonKzuK(1,4));
@@ -1748,14 +1748,15 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzMatrixgetExzentritaetVomKnotenEmptyMatrixList(){
         //        String pathname = "src/export/graph7.csv";
         boolean exceptionThrwon = false;
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
-//            mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-            mv1.getExzentritaetVomKnoten(true,2);
+            //            mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
+            mv1.getExzentritaetVomKnoten(true, 2);
 
         }catch(GraphenException e){
             exceptionThrwon = true;
@@ -1768,6 +1769,7 @@ public class TestLoadCSV{
         }*/
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzMatrixgetExzentritaetVomKnotenEmptyExzentritaetenList(){
         //        String pathname = "src/export/graph7.csv";
@@ -1775,7 +1777,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-            mv1.getExzentritaetVomKnoten(true,2);
+            mv1.getExzentritaetVomKnoten(true, 2);
             exceptionThrwon = true;
         }catch(GraphenException e){
 
@@ -1796,7 +1798,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-            mv1.getExzentritaetVomKnoten(true,0);
+            mv1.getExzentritaetVomKnoten(true, 0);
 
         }catch(GraphenException e){
             exceptionThrwon = true;
@@ -1809,6 +1811,7 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzMatrixgetExzentritaetVomKnotenRangeHigh(){
         //        String pathname = "src/export/graph7.csv";
@@ -1816,7 +1819,7 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-            mv1.getExzentritaetVomKnoten(true,mv1.getMatrixList().get(0).getDimension()+1);
+            mv1.getExzentritaetVomKnoten(true, mv1.getMatrixList().get(0).getDimension()+1);
 
 
         }catch(GraphenException e){
@@ -1830,6 +1833,7 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzMatrixgetExzentritaetVomKnotenOK(){
         //        String pathname = "src/export/graph7.csv";
@@ -1837,11 +1841,11 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-            mv1.getExzentritaetVomKnoten(true,1);
-            mv1.getExzentritaetVomKnoten(true,2);
-            mv1.getExzentritaetVomKnoten(true,3);
-            mv1.getExzentritaetVomKnoten(true,4);
-            mv1.getExzentritaetVomKnoten(true,5);
+            mv1.getExzentritaetVomKnoten(true, 1);
+            mv1.getExzentritaetVomKnoten(true, 2);
+            mv1.getExzentritaetVomKnoten(true, 3);
+            mv1.getExzentritaetVomKnoten(true, 4);
+            mv1.getExzentritaetVomKnoten(true, 5);
 
             exceptionThrwon = true;
         }catch(GraphenException e){
@@ -1855,6 +1859,7 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzMatrixgetDurchmesser(){
         //        String pathname = "src/export/graph7.csv";
@@ -1862,13 +1867,13 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-//            System.out.println( mv1.durchmesser());
-//            System.out.println( mv1.radius());
-//            System.out.println(mv1.exzentritäten());
-//            System.out.println(mv1.getExzentritaetVomKnoten(1));
-//            System.out.println(mv1.durchmesser2());
-//            System.out.println(mv1.radius2());
-//            mv1.distanzMatrix2(2);
+            //            System.out.println( mv1.durchmesser());
+            //            System.out.println( mv1.radius());
+            //            System.out.println(mv1.exzentritäten());
+            //            System.out.println(mv1.getExzentritaetVomKnoten(1));
+            //            System.out.println(mv1.durchmesser2());
+            //            System.out.println(mv1.radius2());
+            //            mv1.distanzMatrix2(2);
             mv1.exzentritaeten();
             System.out.println(mv1.getDistanzListe());
             System.out.println(mv1.toString2());
@@ -1885,6 +1890,7 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzvonKzuK(){
         //        String pathname = "src/export/graph7.csv";
@@ -1892,12 +1898,12 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-//
-//            mv1.exzentritäten();
-//            System.out.println(mv1.getDistanzListe());
-//            System.out.println(mv1.toString2());
+            //
+            //            mv1.exzentritäten();
+            //            System.out.println(mv1.getDistanzListe());
+            //            System.out.println(mv1.toString2());
 
-            System.out.println(mv1.distanzVonKzuK(3,5));
+            System.out.println(mv1.distanzVonKzuK(3, 5));
             System.out.println(mv1.radius2(true));
 
             exceptionThrwon = true;
@@ -1912,6 +1918,7 @@ public class TestLoadCSV{
         }
         assert (exceptionThrwon);
     }
+
     @Test
     public void testLoadDistanzvonKzuK2(){
         //        String pathname = "src/export/graph7.csv";
@@ -1919,12 +1926,12 @@ public class TestLoadCSV{
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung();
             mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
-//
-//            mv1.exzentritäten();
-//            System.out.println(mv1.getDistanzListe());
-//            System.out.println(mv1.toString2());
+            //
+            //            mv1.exzentritäten();
+            //            System.out.println(mv1.getDistanzListe());
+            //            System.out.println(mv1.toString2());
 
-            System.out.println(mv1.distanzVonKzuK(3,5));
+            System.out.println(mv1.distanzVonKzuK(3, 5));
             System.out.println(mv1.radius(true));
 
             exceptionThrwon = true;
@@ -1944,16 +1951,17 @@ public class TestLoadCSV{
     public void testDistanz(){
         try{
             MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
-            mv1.load(PersistType.CSV,"src/export/Test_Demo2.csv");
+            mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
             System.out.println(String.format(Locale.US, "%3s, %8d %10.2f", "Rene", 19, 3.14));
             mv1.distanzMatrix3();
-            System.out.println(mv1.distanzVonKzuK(2,4));
+            System.out.println(mv1.distanzVonKzuK(2, 4));
             System.out.println(mv1.getDistanzListe());
-            System.out.println(mv1.getExzentritaetVomKnoten(true,3));
+            System.out.println(mv1.getExzentritaetVomKnoten(true, 3));
 
             //            System.out.println(mv1.toString());
-//            System.out.println(mv1.toString());
-            System.out.println(mv1.getDistanzListe().get(0 ).get(mv1.getDistanzListenGroesse()).toStringCSVMatrix());
+            //            System.out.println(mv1.toString());
+            System.out.println(mv1.getDistanzListe().get(0).get(mv1.getDistanzListenGroesse()).toStringCSVMatrix());
+
         }catch(GraphenException e){
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -1963,26 +1971,5 @@ public class TestLoadCSV{
     }
 
 
-//    public static void testHeap(){
-//        /*TestLoadCSV mv = new TestLoadCSV();
-//        System.out.println(mv.hashCode());
-//        System.out.println(Integer.toHexString(mv.hashCode()));
-//        int a = 99;
-//        int b = 9;
-//
-//        System.out.println(Integer.toHexString(a));
-//        System.out.println(Integer.compare(a,b));
-//        System.out.println(Integer.compareUnsigned(a,b));*/
-//
-////                 (5,6)PublicKey;
-////                 (3,6)sekrektkey;
-//
-//
-//    }
-//
-//
-//    public static void main(String[] args){
-//        TestLoadCSV.testHeap();
-//    }
 }
 

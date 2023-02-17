@@ -7,30 +7,34 @@ import persister.Persistable;
 import persister.PersisterException;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
             IN DIESER KLASSE WERDEN DIE MATRIZEN GELADEN UND VERWALTET.
             NACH DEM LADEN, WERDEN DIE DATEN WEITER IN DIE MATRIX KLASSE GELEITET.
  */
 
-public class MatrixVerwaltung {
+public class MatrixVerwaltung{
     private String name;
     private List<Matrix> matrixList;
     private Map<Integer, Matrix> adjaMatrix;
     private Matrix kompMatrix;
+    private Matrix kompMatrix2;
+    private Matrix deletedMatrix;
     private Map<PersistType, Persistable<List<Matrix>>> persisterMap;       ////////// 1    Context class
     //    private Persistable<List<Matrix>> matrixPersister;
     private List<Map<Integer, Matrix>> potenzListe;
     private List<Map<Integer, Matrix>> distanzListe;
     private int distanzListenGroesse;
+    private int komponentenAnzahl;
+    private int komponentenAnzahl2;
     private List<Matrix> exzentritaetenList;
     private int radius;
     private int durchmesser;
     private int exzentritaet;
 
-    public MatrixVerwaltung(String name) throws GraphenException {
+    public MatrixVerwaltung(String name) throws GraphenException{
         setName(name);
         matrixList = new ArrayList<>();
         initPersister();                                                    ////////// 3
@@ -39,7 +43,7 @@ public class MatrixVerwaltung {
         distanzListe = new ArrayList<>();
     }
 
-    public MatrixVerwaltung() throws GraphenException {
+    public MatrixVerwaltung() throws GraphenException{
         setName("-default-");
         matrixList = new ArrayList<>();
         initPersister();                                                    ////////// 3
@@ -48,129 +52,129 @@ public class MatrixVerwaltung {
         distanzListe = new ArrayList<>();
     }
 
-    private void initPersister() {                                            ////////// 2
+    private void initPersister(){                                            ////////// 2
         persisterMap = new HashMap<>();
         persisterMap.put(PersistType.SER, new PersisterSER<>());
         persisterMap.put(PersistType.CSV, new PersisterCSV());
     }
 
     //getter
-    public String getName() {
+    public String getName(){
         return name;
     }
 
-    public List<Matrix> getMatrixList() {        //Bei get getListe() Methode braucht es unbedingt eine toString der
+    public List<Matrix> getMatrixList(){        //Bei get getListe() Methode braucht es unbedingt eine toString der
         // Model-Klasse, sonst gibt die Verwaltungsklasse keine Liste aus. Ausgabe like adklfj@12312
         return matrixList;
     }
 
     //setter
-    public void setName(String name) throws GraphenException {
-        if (name != null) {
-            if (!name.isBlank()) {
-                if (name.length() > 1) {
+    public void setName(String name) throws GraphenException{
+        if(name != null){
+            if(!name.isBlank()){
+                if(name.length()>1){
                     this.name = name;
-                } else {
+                }else{
                     throw new GraphenException("setName() | Character length must be bigger than 1! Your input: "+name.length());
                 }
-            } else {
+            }else{
                 throw new GraphenException("setName() | Name is blank!");
             }
-        } else {
+        }else{
             throw new GraphenException("setName() | Null-Ref at name!");
         }
     }
 
-    public void add(Matrix matrix) throws GraphenException {
-        if (matrix != null) {
-            if (!matrixList.contains(matrix)) {
+    public void add(Matrix matrix) throws GraphenException{
+        if(matrix != null){
+            if(!matrixList.contains(matrix)){
                 matrixList.add(matrix);
-            } else {
+            }else{
                 throw new GraphenException("add() | Matrix exists!");
             }
-        } else {
+        }else{
             throw new GraphenException("add() | Null-Ref at add!");
         }
     }
 
-    public Matrix getMatrix(int pos) throws GraphenException { //todo
-        if (pos >= 0 && pos <= matrixList.size()) {
-            if (!matrixList.isEmpty()) {
+    public Matrix getMatrix(int pos) throws GraphenException{ //todo
+        if(pos>=0 && pos<=matrixList.size()){
+            if(!matrixList.isEmpty()){
                 return matrixList.get(pos);
-            } else {
+            }else{
                 throw new GraphenException("Empty matrix-list!");
             }
-        } else {
+        }else{
             throw new GraphenException("Position is out of ranger! You have only "+matrixList.size()+" items in "+"your list! Therefore position from 0 to "+(matrixList.size()-1));
         }
     }
 
-    private boolean pruefeMatrix(Matrix matrix) throws GraphenException {
+    private boolean pruefeMatrix(Matrix matrix) throws GraphenException{
         int tempZaehler = 0;
-        if (matrix != null) {
-            if (matrix.getDimension() > 0) {
-                for(int i = 0; i < matrix.getDimension(); i++){
-                    for(int k = 0; k < matrix.getDimension(); k++){
-                        if (matrix.getElement(i, k) >= 0 && matrix.getElement(i, k) <= 2) {
+        if(matrix != null){
+            if(matrix.getDimension()>0){
+                for(int i = 0; i<matrix.getDimension(); i++){
+                    for(int k = 0; k<matrix.getDimension(); k++){
+                        if(matrix.getElement(i, k)>=0 && matrix.getElement(i, k)<=2){
                             tempZaehler++;
-                        } else {
+                        }else{
                             throw new GraphenException("pruefeMatirx | Adjazenzmatrix is just set by 0 and 1! Your "+"Matrix has numbers bigger than 1 in line: "+(i+1)+" and row: "+(k+1));
                         }
                     }
                 }
-                if (tempZaehler == matrix.getDimension()*matrix.getDimension()) {
+                if(tempZaehler == matrix.getDimension()*matrix.getDimension()){
                     return true;
                 }
-            } else {
+            }else{
                 throw new GraphenException("pruefeMatrix | No dimension set!");
             }
-        } else {
+        }else{
             throw new GraphenException("pruefeMatrix | Null-Ref. at matrix!");
         }
         return false;
     }
 
-    public int[] knotenGrad(boolean print, Matrix matrix) throws GraphenException {
+    public int[] knotenGrad(boolean print, Matrix matrix) throws GraphenException{
         int[] tempGrad;
         //        StringBuilder builder = new StringBuilder();
-        if (matrix != null) {
+        if(matrix != null){
             tempGrad = new int[matrix.getDimension()];
             int tempZeilenWert = 0;
-            if (pruefeMatrix(matrix)) {
-                for(int i = 0; i < matrix.getDimension(); i++){
-                    for(int k = 0; k < matrix.getDimension(); k++){
+            if(pruefeMatrix(matrix)){
+                for(int i = 0; i<matrix.getDimension(); i++){
+                    for(int k = 0; k<matrix.getDimension(); k++){
                         tempZeilenWert += matrix.getElement(i, k);
                     }
                     tempGrad[i] = tempZeilenWert;
                     tempZeilenWert = 0;
-                    if (print) {
+                    if(print){
                         System.out.println("Zeile "+(i+1)+": d(v)= "+tempGrad[i]); //in use
                     }
                     //                    builder.append("Zeile: ").append(i+1).append(": d(v)= ").append
                     //                    (tempGrad[i]).toString();
                 }
                 return tempGrad;
-            } else {
+            }else{
                 throw new GraphenException("knotenGrad | Matrix is not in right form! pruefeMatrix goes wrong!");
             }
-        } else {
+        }else{
             throw new GraphenException("knotenGrad | Null-Ref. at matrix!");
         }
     }
 
-    public void knotenGradAllMatrix() throws GraphenException {
+    public void knotenGradAllMatrix() throws GraphenException{
         int[] tempGrad;
         int matrix = 1;
         StringBuilder builder = new StringBuilder();
-        if (!matrixList.isEmpty()) {
-            for(Matrix mx : matrixList){
+        if(!matrixList.isEmpty()){
+            for(Matrix mx: matrixList){
                 tempGrad = new int[mx.getDimension()];
                 int tempZeilenWert = 0;
-                if (pruefeMatrix(mx)) {
+                if(pruefeMatrix(mx)){
                     int[] oneMatrix = knotenGrad(false, mx);
                     //                    builder.append("Matrix: ").append(matrix).toString();
                     System.out.println("Matrix: "+matrix++);
-                    for(int i = 0; i < oneMatrix.length; i++){
+                    for(int i = 0; i<oneMatrix.length; i++){
                         //                        builder.append(oneMatrix[i]).toString();
                         System.out.println("Line: "+(i+1)+" d(v)="+oneMatrix[i]);
                     }
@@ -184,30 +188,30 @@ public class MatrixVerwaltung {
                     //                        System.out.println("Zeile " + (i + 1) + ": d(v)= " + tempGrad[i]);
                     //                    }
 
-                } else {
+                }else{
                     throw new GraphenException("knotenGradAllMatrix | Matrix is not in right form! pruefeMatrix goes "+"wrong!");
                 }
             }
-        } else {
+        }else{
             throw new GraphenException("knotenGradAllMatrix | Empty matrix-List!");
         }
     }
 
-    public void knotenGradExpectedMatrix(int pos) throws GraphenException {
+    public void knotenGradExpectedMatrix(int pos) throws GraphenException{
         int[] tempGrad;
         int matrix = 1;
         StringBuilder builder = new StringBuilder();
-        if (!matrixList.isEmpty()) {
-            if (pos >= 0 && pos < matrixList.size()) {
+        if(!matrixList.isEmpty()){
+            if(pos>=0 && pos<matrixList.size()){
                 //                for(Matrix mx: matrixList){
                 Matrix mx = getMatrix(pos);
                 tempGrad = new int[mx.getDimension()];
                 int tempZeilenWert = 0;
-                if (pruefeMatrix(mx)) {
+                if(pruefeMatrix(mx)){
                     int[] oneMatrix = knotenGrad(false, mx);
                     //                    builder.append("Matrix: ").append(matrix).toString();
                     System.out.println("Matrix at position: "+pos);
-                    for(int i = 0; i < oneMatrix.length; i++){
+                    for(int i = 0; i<oneMatrix.length; i++){
                         //                        builder.append(oneMatrix[i]).toString();
                         System.out.println("Line: "+(i+1)+" d(v)="+oneMatrix[i]);
                     }
@@ -221,31 +225,31 @@ public class MatrixVerwaltung {
                     //                        System.out.println("Zeile " + (i + 1) + ": d(v)= " + tempGrad[i]);
                     //                    }
 
-                } else {
+                }else{
                     throw new GraphenException("knotenGradExpectedMatrix | Matrix is not in right form! pruefeMatrix "+"goes wrong!");
                 }
                 //                }
-            } else {
+            }else{
                 throw new GraphenException("knotenGradExpectedMatrix | Position is out of range! It must be between "+"0"+" and "+(matrixList.size()-1)+", your input: "+pos);
             }
-        } else {
+        }else{
             throw new GraphenException("knotenGradExpectedMatrix | Empty matrix-List!");
         }
     }
 
 
-    public int[] knotenGradLineSelect(boolean print, int line) throws GraphenException {  //TODO Schlingen in die Berechnung
+    public int[] knotenGradLineSelect(boolean print, int line) throws GraphenException{  //TODO Schlingen in die Berechnung
         // einbeziehen!
         int[] tempDegreeList = new int[0];
-        if (line >= 1) {
+        if(line>=1){
             int zaehler = 0;
-            if (!matrixList.isEmpty()) {
+            if(!matrixList.isEmpty()){
                 tempDegreeList = new int[matrixList.size()];
-                for(Matrix mx : matrixList){
+                for(Matrix mx: matrixList){
 
                     int[] oneMatrixDegree = knotenGrad(false, mx);
-                    if (line <= mx.getDimension()) {
-                        if (print) {
+                    if(line<=mx.getDimension()){
+                        if(print){
                             System.out.println("Matrix: "+(zaehler+1)+", Line: "+line+" d(v)="+oneMatrixDegree[line-1]);
                         }
                         tempDegreeList[zaehler] = oneMatrixDegree[line-1];
@@ -253,19 +257,19 @@ public class MatrixVerwaltung {
                     zaehler++;
                 }
                 return tempDegreeList;
-            } else {
+            }else{
                 throw new GraphenException("knotenGradLineSelect | Empty matrix-List!");
             }
-        } else {
+        }else{
             throw new GraphenException("Line must be bigger than 0! Your input: "+line);
         }
 
     }
 
-    public void adjazenzmatrix(int pos, int pot) throws GraphenException {
-        if (!matrixList.isEmpty()) {
-            if (pos >= 0 && pos < matrixList.size()) {
-                if (pot >= 1 && pot < 100) {
+    public void adjazenzmatrix(int pos, int pot) throws GraphenException{
+        if(!matrixList.isEmpty()){
+            if(pos>=0 && pos<matrixList.size()){
+                if(pot>=1 && pot<100){
                     int laufVariable = 1;
 
                     adjaMatrix = new HashMap<>();
@@ -275,11 +279,11 @@ public class MatrixVerwaltung {
                     //                int[] tempArray = new int[matrixList.get(0).getDimension()];
 
                     //                if(pot == 2){
-                    for(int p = 1; p < pot; p++){
+                    for(int p = 1; p<pot; p++){
                         mx = new Matrix("# "+(p+1)+" Weg Matrix", matrixList.get(pos).getDimension());
-                        for(int i = 0; i < matrixList.get(pos).getDimension(); i++){
-                            for(int j = 0; j < matrixList.get(pos).getDimension(); j++){
-                                for(int k = 0; k < matrixList.get(pos).getDimension(); k++){
+                        for(int i = 0; i<matrixList.get(pos).getDimension(); i++){
+                            for(int j = 0; j<matrixList.get(pos).getDimension(); j++){
+                                for(int k = 0; k<matrixList.get(pos).getDimension(); k++){
                                     //         sum += matrixList.get(zaehler).getElement(i, k) * matrixList.get
                                     //         (zaehler).getElement(k, j);
                                     sum += adjaMatrix.get(laufVariable).getElement(i, k)*adjaMatrix.get(1).getElement(k, j);
@@ -295,13 +299,13 @@ public class MatrixVerwaltung {
                     }
                     //                    }
 
-                } else {
+                }else{
                     throw new GraphenException("Power of Potenzmatrix must be between 0 and 100! Your input: "+pot);
                 }
-            } else {
+            }else{
                 throw new GraphenException("You have "+matrixList.size()+" Matrixes in your List! Position of "+"Potenzmatrix must be Bigger or same as 0 and smaller than "+(matrixList.size()-1)+"! "+"Your input: "+pos);
             }
-        } else {
+        }else{
             throw new GraphenException("adjazenzmatrix | Empty matrix list!");
         }
         potenzListe.add(adjaMatrix);
@@ -312,10 +316,10 @@ public class MatrixVerwaltung {
     /*
     In Benutzung
      */
-    public List<Map<Integer, Matrix>> adjazenzmatrix2(int pos, int pot) throws GraphenException {
-        if (!matrixList.isEmpty() && matrixList.get(pos).getDimension() > 1) {
-            if (pos >= 0 && pos < matrixList.size()) {
-                if (pot >= 1 && pot < 100) {
+    public List<Map<Integer, Matrix>> adjazenzmatrix2(int pos, int pot) throws GraphenException{
+        if(!matrixList.isEmpty() && matrixList.get(pos).getDimension()>1){
+            if(pos>=0 && pos<matrixList.size()){
+                if(pot>=1 && pot<100){
                     int laufVariable = 1;
                     adjaMatrix = new HashMap<>();
                     Matrix mx;
@@ -326,11 +330,11 @@ public class MatrixVerwaltung {
                     //                int[] tempArray = new int[matrixList.get(0).getDimension()];
 
                     //                if(pot == 2){
-                    for(int p = 1; p < pot; p++){
+                    for(int p = 1; p<pot; p++){
                         mx = new Matrix("# "+(p+1)+" Weg Matrix", matrixList.get(pos).getDimension());
-                        for(int i = 0; i < matrixList.get(pos).getDimension(); i++){
-                            for(int j = 0; j < matrixList.get(pos).getDimension(); j++){
-                                for(int k = 0; k < matrixList.get(pos).getDimension(); k++){
+                        for(int i = 0; i<matrixList.get(pos).getDimension(); i++){
+                            for(int j = 0; j<matrixList.get(pos).getDimension(); j++){
+                                for(int k = 0; k<matrixList.get(pos).getDimension(); k++){
                                     //         sum += matrixList.get(zaehler).getElement(i, k) * matrixList.get
                                     //         (zaehler).getElement(k, j);
                                     sum += adjaMatrix.get(laufVariable).getElement(i, k)*adjaMatrix.get(1).getElement(k, j);
@@ -346,14 +350,62 @@ public class MatrixVerwaltung {
                     }
                     potenzListe.add(adjaMatrix);
                     //                    }
-                } else {
+                }else{
                     throw new GraphenException("Power of Potenzmatrix must be between 0 and 100! Your input: "+pot);
                 }
-            } else {
+            }else{
                 throw new GraphenException("You have "+matrixList.size()+" Matrixes in your List! Position of "+"Potenzmatrix must be Bigger or same as 0 and smaller than "+(matrixList.size()-1)+"! "+"Your input: "+pos);
             }
-        } else {
-            throw new GraphenException(matrixList.isEmpty() ? "adjazenzmatrix | Empty matrix list!" : "adjazenzmatrix | Matirx has only one vertex!");
+        }else{
+            throw new GraphenException(matrixList.isEmpty() ? "adjazenzmatrix | Empty matrix list!": "adjazenzmatrix | Matirx has only one vertex!");
+        }
+
+        return potenzListe;
+
+    }
+
+    public List<Map<Integer, Matrix>> adjazenzmatrixKomponents(int pos, int pot) throws GraphenException{
+        if(!matrixList.isEmpty() && matrixList.get(pos).getDimension()>1){
+            if(pos>=0 && pos<matrixList.size()){
+                if(pot>=1 && pot<100){
+                    int laufVariable = 1;
+                    adjaMatrix = new HashMap<>();
+                    Matrix mx;
+                    int sum = 0;
+
+
+                    adjaMatrix.put(1, matrixList.get(pos));
+                    //                int[] tempArray = new int[matrixList.get(0).getDimension()];
+
+                    //                if(pot == 2){
+                    for(int p = 1; p<pot; p++){
+                        mx = new Matrix("# "+(p+1)+" Weg Matrix", matrixList.get(pos).getDimension());
+                        for(int i = 0; i<matrixList.get(pos).getDimension(); i++){
+                            for(int j = 0; j<matrixList.get(pos).getDimension(); j++){
+                                for(int k = 0; k<matrixList.get(pos).getDimension(); k++){
+                                    //         sum += matrixList.get(zaehler).getElement(i, k) * matrixList.get
+                                    //         (zaehler).getElement(k, j);
+                                    sum += adjaMatrix.get(laufVariable).getElement(i, k)*adjaMatrix.get(1).getElement(k, j);
+
+                                }
+                                mx.setElement(i, j, sum);
+                                sum = 0;
+                            }
+                        }
+                        //                    add(mx);
+                        adjaMatrix.put(laufVariable+1, mx);
+                        laufVariable++;
+                    }
+                    potenzListe.add(adjaMatrix);
+                    //                    }
+                }else{
+                    throw new GraphenException("Power of Potenzmatrix must be between 0 and 100! Your input: "+pot);
+                }
+            }else{
+                throw new GraphenException("You have "+matrixList.size()+" Matrixes in your List! Position of "+"Potenzmatrix must be Bigger or same as 0 and smaller than "+(matrixList.size()-1)+"! "+"Your input: "+pos);
+            }
+        }else{
+            throw new GraphenException(matrixList.isEmpty() ? "adjazenzmatrix | Empty matrix list!": "adjazenzmatrix | Matirx has only one vertex!");
         }
 
         return potenzListe;
@@ -684,8 +736,8 @@ public class MatrixVerwaltung {
         }
     }*/
 
-    public void distanzMatrix3() throws GraphenException {  //für Berechnungen in Benutzung
-        if (!matrixList.isEmpty()) {
+    public void distanzMatrix3() throws GraphenException{  //für Berechnungen in Benutzung
+        if(!matrixList.isEmpty()){
             int tempZaehler = 1;
             int wegZaehler = 0;
             //            if(weg > 0){
@@ -696,13 +748,13 @@ public class MatrixVerwaltung {
             Map<Integer, Matrix> tempDistanzMap = new HashMap<>();
             Matrix dmx1 = new Matrix("#"+tempZaehler+"er Distanz", matrixList.get(0).getDimension());
 
-            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                    if (i != j) {
-                        if (mx1.getElement(i, j) == 1) {
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                    if(i != j){
+                        if(mx1.getElement(i, j) == 1){
                             dmx1.setElementDistanzMatrix(i, j, 1);
                         }
-                        if (mx1.getElement(i, j) == 0) {
+                        if(mx1.getElement(i, j) == 0){
                             dmx1.setElementDistanzMatrix(i, j, -1);
                         }
                     }
@@ -712,26 +764,26 @@ public class MatrixVerwaltung {
             tempZaehler++;
             wegZaehler++;
 
-            for(int p = 0; p < potenzListe.get(0).size(); p++){
-                if (!potenzListe.get(0).isEmpty()) {
-                    if (wegZaehler < matrixList.get(0).getDimension() && pruefeDistanzMatrix(tempDistanzMap.get(tempZaehler-1))) {
-                        if (tempZaehler == 1) {
+            for(int p = 0; p<potenzListe.get(0).size(); p++){
+                if(!potenzListe.get(0).isEmpty()){
+                    if(wegZaehler<matrixList.get(0).getDimension() && pruefeDistanzMatrix(tempDistanzMap.get(tempZaehler-1))){
+                        if(tempZaehler == 1){
                             //                            Matrix dmx1 = new Matrix(matrixList.get(0).getDimension());
 
 
-                        } else {
+                        }else{
                             Matrix dmx2 = new Matrix("#"+tempZaehler+"er Distanz", matrixList.get(0).getDimension());
 
-                            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
+                            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
                                     dmx2.setElementDistanzMatrix(i, j, tempDistanzMap.get(tempZaehler-1).getElement(i, j));
                                 }
                             }
 
-                            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                                    if (i != j) {
-                                        if (potenzListe.get(0).get(tempZaehler).getElement(i, j) != 0 && tempDistanzMap.get(tempZaehler-1).getElement(i, j) == -1) {
+                            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                                    if(i != j){
+                                        if(potenzListe.get(0).get(tempZaehler).getElement(i, j) != 0 && tempDistanzMap.get(tempZaehler-1).getElement(i, j) == -1){
                                             dmx2.setElementDistanzMatrix(i, j, tempZaehler);
                                         }
                                     }
@@ -750,76 +802,76 @@ public class MatrixVerwaltung {
             //            }else{
             //                throw new GraphenException("distanzMatrix2 | weg must be bigger than 0!");
             //            }
-        } else {
+        }else{
             throw new GraphenException("distanzMatrix2 | Empty matrix list!");
         }
     }
 
-    public List<Map<Integer, Matrix>> getDistanzListe() throws GraphenException {
-        if (!distanzListe.isEmpty()) {
+    public List<Map<Integer, Matrix>> getDistanzListe() throws GraphenException{
+        if(!distanzListe.isEmpty()){
             //            List<Map<Integer, Matrix>> tempList;
             //            for(int i = 0; i<distanzListe.get(0).size();i++){
             //            tempList.add(distanzListe);
             //            }
             return distanzListe;
-        } else {
+        }else{
             throw new GraphenException("wegMatrix | Empty matrix list!");
         }
     }
 
 
-    public int getDistanzListenGroesse() {
+    public int getDistanzListenGroesse(){
         return distanzListenGroesse;
     }
 
-    private boolean pruefeDistanzMatrix(Matrix mx) throws GraphenException {
-        if (mx != null) {
-            if (!matrixList.isEmpty()) {
+    private boolean pruefeDistanzMatrix(Matrix mx) throws GraphenException{
+        if(mx != null){
+            if(!matrixList.isEmpty()){
                 int tempZaehler = 0;
-                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                    for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                        if (mx.getElement(i, j) == -1) {
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                    for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                        if(mx.getElement(i, j) == -1){
                             return true;
                         }
 
                     }
                 }
-            } else {
+            }else{
                 throw new GraphenException("prüfeDistanzMatrix | Empty matrixList at pruefeDistanzMatrix!");
             }
-        } else {
+        }else{
             throw new GraphenException("prüfeDistanzMatrix | Null-Ref. at pruefeDistanzMatrix!");
         }
         return false;
     }
 
-    public int distanzVonKzuK(int knoten1, int knoten2) throws GraphenException {
+    public int distanzVonKzuK(int knoten1, int knoten2) throws GraphenException{
         //        int a;
-        if (!matrixList.isEmpty()) {
-            if (knoten1 > 0 && knoten1 <= matrixList.get(0).getDimension()) {
-                if (knoten2 > 0 && knoten2 <= matrixList.get(0).getDimension()) {
+        if(!matrixList.isEmpty()){
+            if(knoten1>0 && knoten1<=matrixList.get(0).getDimension()){
+                if(knoten2>0 && knoten2<=matrixList.get(0).getDimension()){
                     distanzMatrix3();
-                    if (knoten1 != knoten2) {
-                        if (this.distanzListenGroesse > 0) {
+                    if(knoten1 != knoten2){
+                        if(this.distanzListenGroesse>0){
                             return getDistanzListe().get(0).get(this.distanzListenGroesse).getElement((Math.min(knoten1-1, knoten2-1)), (Math.max(knoten1-1, knoten2-1)));
-                        } else {
+                        }else{
                             throw new GraphenException("distanzVonKzuK | Empty distanzList!");
                         }
-                    } else {
+                    }else{
                         throw new GraphenException("distanzVonKzuK | Not allowed same vertices as input! Your input: "+"Vertex1:"+knoten1+", Vertex2:"+knoten2);
                     }
-                } else {
+                }else{
                     throw new GraphenException("distanzVonKzuK | Vertex2 degree must be between 0 and "+matrixList.get(0).getDimension()+", Your input: "+knoten2);
                 }
-            } else {
+            }else{
                 throw new GraphenException("distanzVonKzuK | Vertex1 degree must be between 0 and "+matrixList.get(0).getDimension()+", Your input: "+knoten1);
             }
-        } else {
+        }else{
             throw new GraphenException("distanzVonKzuK | Empty matrix list!");
         }
     }
 
-    public List<Matrix> exzentritaeten() throws GraphenException {  //Hier wird nur eine Matrix mit nur den
+    public List<Matrix> exzentritaeten() throws GraphenException{  //Hier wird nur eine Matrix mit nur den
         // Knotenwerten der Exzentritäten erzeugt!
         int tempEx = Integer.MIN_VALUE;
         int tempExAusgabe = Integer.MIN_VALUE;
@@ -828,26 +880,26 @@ public class MatrixVerwaltung {
         exzentritaetenList = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
         distanzListe = new ArrayList<>();
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             Matrix mx1 = new Matrix("Exzentritäten ", matrixList.get(0).getDimension());
             distanzMatrix3();
-            if (!distanzListe.isEmpty()) {  //Zum Testen wurde in dieser Methode die distanzMatrix3() abgewählt und die
+            if(!distanzListe.isEmpty()){  //Zum Testen wurde in dieser Methode die distanzMatrix3() abgewählt und die
                 // distanzListe erzeugt, sonst NullPointerException!
 
-                if (matrixList.get(0).getDimension() > 1) {
-                    for(int i = 1; i < matrixList.get(0).getDimension()+1; i++){
-                        for(int j = 1; j < matrixList.get(0).getDimension()+1; j++){
-                            if (i != j) {
-                                if (distanzVonKzuK(i, j) > tempEx) {
+                if(matrixList.get(0).getDimension()>1){
+                    for(int i = 1; i<matrixList.get(0).getDimension()+1; i++){
+                        for(int j = 1; j<matrixList.get(0).getDimension()+1; j++){
+                            if(i != j){
+                                if(distanzVonKzuK(i, j)>tempEx){
                                     tempEx = distanzVonKzuK(i, j);
                                     tempExAusgabe = distanzVonKzuK(i, j);
                                     tempKnotenj = j;
                                     tempKnoteni = i;
                                     mx1.setElement(i-1, j-1, 0);
-                                } else {
+                                }else{
                                     mx1.setElement(i-1, j-1, 0);
                                 }
-                            } else {
+                            }else{
                                 mx1.setElement(i-1, j-1, 0);
                             }
                         }
@@ -862,326 +914,326 @@ public class MatrixVerwaltung {
                         //                    "+tempEx).toString();
                     }
                     exzentritaetenList.add(mx1);
-                } else {
+                }else{
                     throw new GraphenException("exzentritäten | Exzentrität von Matix ist unendlich!");
                 }
 
 
-            } else {
+            }else{
                 throw new GraphenException("exzentritäten | Empty distanzList!");
             }
-        } else {
+        }else{
             throw new GraphenException("exzentritäten | Empty matrixList!");
         }
         return exzentritaetenList;
     }
 
-    public int getExzentritaetVomKnoten(boolean print, int knoten) throws GraphenException {
+    public int getExzentritaetVomKnoten(boolean print, int knoten) throws GraphenException{
         int a = 0;
         int tempKnoteni = 0;
         int tempKnotenj = 0;
         int tempEx = 0;
         //        exzentritaetenList = new ArrayList<>();
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             exzentritaeten();
-            if (!exzentritaetenList.isEmpty()) {      //Für Test exzentritäten() abgewählt und Liste erzeugt!
-                if (knoten > 0 && knoten <= matrixList.get(0).getDimension()) {
-                    for(int k = 0; k < matrixList.get(0).getDimension(); k++){
-                        if (exzentritaetenList.get(0).getElement(knoten-1, k) != 0) {
+            if(!exzentritaetenList.isEmpty()){      //Für Test exzentritäten() abgewählt und Liste erzeugt!
+                if(knoten>0 && knoten<=matrixList.get(0).getDimension()){
+                    for(int k = 0; k<matrixList.get(0).getDimension(); k++){
+                        if(exzentritaetenList.get(0).getElement(knoten-1, k) != 0){
                             a = exzentritaetenList.get(0).getElement(knoten-1, k);
-                            if (print) {
+                            if(print){
                                 System.out.println("ex("+knoten+") = "+a+" | ["+knoten+", "+(k+1)+"]"); //Ist im Einsatz, nur für Zentrum ausgeklammert.
                             }
                         }
                     }
-                } else {
+                }else{
                     throw new GraphenException("getExzentritätVomKnoten | Vertex must be between 0 and "+matrixList.get(0).getDimension());
                 }
-            } else {
+            }else{
                 throw new GraphenException("getExzentritätVomKnoten | Empty exentric list!");
             }
-        } else {
+        }else{
             throw new GraphenException("getExzentritätVomKnoten | Empty matrixList!");
         }
 
         return a;
     }
 
-    public int durchmesser(boolean print) throws GraphenException {
+    public int durchmesser(boolean print) throws GraphenException{
         int tempDm = Integer.MIN_VALUE;
         int tempKnoteni = 0;
         int tempKnotenj = 0;
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             exzentritaeten();
-            if (!exzentritaetenList.isEmpty()) {
-                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                    for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                        if (getExzentritaetenList().get(0).getElement(i, j) > tempDm) {
+            if(!exzentritaetenList.isEmpty()){
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                    for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                        if(getExzentritaetenList().get(0).getElement(i, j)>tempDm){
                             tempDm = getExzentritaetenList().get(0).getElement(i, j);
                             tempKnoteni = i;
                             tempKnotenj = j;
                         }
                     }
                 }
-            } else {
+            }else{
                 throw new GraphenException("getExzentritätVomKnoten | Empty exentric list!");
             }
-        } else {
+        }else{
             throw new GraphenException("getExzentritätVomKnoten | Empty matrixList!");
         }
-        if (print) {
+        if(print){
             System.out.println("dm(G) = "+tempDm);
         }
         this.durchmesser = tempDm;
         return tempDm;
     }
 
-    public int durchmesser2(boolean print) throws GraphenException {
+    public int durchmesser2(boolean print) throws GraphenException{
         int tempDm = Integer.MIN_VALUE;
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             //            if(!distanzListe.isEmpty()){
-            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                if (getExzentritaetVomKnoten(false, i+1) > tempDm) {
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                if(getExzentritaetVomKnoten(false, i+1)>tempDm){
                     tempDm = getExzentritaetVomKnoten(false, i+1);
                 }
             }
             //            }else{
             //                throw new GraphenException("getExzentritätVomKnoten | Empty exentric list!");
             //            }
-        } else {
+        }else{
             throw new GraphenException("durchmesser2 | Empty matrixList!");
         }
-        if (print) {
+        if(print){
             System.out.println("d(G)= "+tempDm);
         }
         this.durchmesser = tempDm;
         return tempDm;
     }
 
-    public int radius(boolean print) throws GraphenException {
+    public int radius(boolean print) throws GraphenException{
         int tempRad = Integer.MAX_VALUE;
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             exzentritaeten();
-            if (!exzentritaetenList.isEmpty()) {
-                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                    for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                        if (getExzentritaetenList().get(0).getElement(i, j) <= tempRad && getExzentritaetenList().get(0).getElement(i, j) > 0) {
+            if(!exzentritaetenList.isEmpty()){
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                    for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                        if(getExzentritaetenList().get(0).getElement(i, j)<=tempRad && getExzentritaetenList().get(0).getElement(i, j)>0){
                             tempRad = getExzentritaetenList().get(0).getElement(i, j);
                             //                            System.out.println("rad(G) = " + tempRad + "[" + (i + 1) + "," + (j + 1) + "]");   //Menge der Radius Kanten!
                         }
                     }
                 }
-            } else {
+            }else{
                 throw new GraphenException("radius | Empty matrixList!");
             }
-        } else {
+        }else{
             throw new GraphenException("getExzentritätVomKnoten | Empty matrixList!");
         }
-        if (print) {
+        if(print){
             System.out.println("rad(G) = "+tempRad);
         }
         this.radius = tempRad;
         return tempRad;
     }
 
-    public int radius2(boolean print) throws GraphenException {
+    public int radius2(boolean print) throws GraphenException{
         int tempRad = Integer.MAX_VALUE;
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
             //            if(!distanzListe.isEmpty()){
-            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                if (getExzentritaetVomKnoten(false, i+1) < tempRad) {
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                if(getExzentritaetVomKnoten(false, i+1)<tempRad){
                     tempRad = getExzentritaetVomKnoten(false, i+1);
                 }
             }
             //            }else{
             //                throw new GraphenException("getExzentritätVomKnoten | Empty exentric list!");
             //            }
-        } else {
+        }else{
             throw new GraphenException("getExzentritätVomKnoten | Empty matrixList!");
         }
-        if (print) {
+        if(print){
             System.out.println("d(G)= "+tempRad);
         }
         this.radius = tempRad;
         return tempRad;
     }
 
-    public List<Matrix> getExzentritaetenList() throws GraphenException {
-        if (!matrixList.isEmpty()) {
-            if (!exzentritaetenList.isEmpty()) {
+    public List<Matrix> getExzentritaetenList() throws GraphenException{
+        if(!matrixList.isEmpty()){
+            if(!exzentritaetenList.isEmpty()){
                 return exzentritaetenList;
-            } else {
+            }else{
                 throw new GraphenException("getExzentritaetenList | Empty exentric list!");
             }
-        } else {
+        }else{
             throw new GraphenException("getExzentritaetenList | Empty matrixList!");
         }
     }
 
-    public void getZentrum() throws GraphenException {
+    public void getZentrum() throws GraphenException{
         int tempRad = radius(false);
         int tempZaehler = 0;
         ArrayList<Integer> zentrumA = new ArrayList<>();
-        if (!matrixList.isEmpty()) {
+        if(!matrixList.isEmpty()){
 
-            for(int i = 1; i <= matrixList.get(0).getDimension(); i++){
-                if (getExzentritaetVomKnoten(false, i) == tempRad) {
+            for(int i = 1; i<=matrixList.get(0).getDimension(); i++){
+                if(getExzentritaetVomKnoten(false, i) == tempRad){
                     zentrumA.add(tempZaehler, i);
                     tempZaehler++;
                 }
             }
             tempZaehler = 0;
             System.out.print("Z(G) = {");
-            for(Integer zen : zentrumA){
-                if (!zentrumA.get(zentrumA.size()-1).equals(zen)) {
+            for(Integer zen: zentrumA){
+                if(!zentrumA.get(zentrumA.size()-1).equals(zen)){
                     System.out.print(zen+",");
-                } else {
+                }else{
                     System.out.print(zen);
                 }
             }
             System.out.println("}");
-        } else {
+        }else{
             throw new GraphenException("getZentrem | Empty matrixList!");
         }
     }
 
 
-    public Matrix delete(Matrix matrix) throws GraphenException {
+    public Matrix delete(Matrix matrix) throws GraphenException{
         Matrix matrix1 = null;
         boolean removed = false;
-        if (matrix != null) {
-            if (!matrixList.isEmpty()) {
+        if(matrix != null){
+            if(!matrixList.isEmpty()){
                 Iterator<Matrix> iter = matrixList.listIterator();
-                while (iter.hasNext()) {
+                while(iter.hasNext()){
                     matrix1 = iter.next();
-                    if (matrix.equals(matrix1)) {
+                    if(matrix.equals(matrix1)){
                         iter.remove();
                         removed = true;
                     }
                 }
-            } else {
+            }else{
                 throw new GraphenException("delete() | Matrix list is empty!");
             }
-        } else {
+        }else{
             throw new GraphenException("delete() | Null-Ref at delete!");
         }
-        if (!removed) {
+        if(!removed){
             throw new GraphenException("Searched matrix dont exists in list!");
         }
         return matrix1;
     }
 
-    public void save(PersistType type, String filename) throws GraphenException, PersisterException {
+    public void save(PersistType type, String filename) throws GraphenException, PersisterException{
         String path = "";
         int zaehler = 1;
 
-        if (filename != null && type != null) {
-            if (!filename.isBlank()) {
-                if (type.equals(PersistType.SER)) {
+        if(filename != null && type != null){
+            if(!filename.isBlank()){
+                if(type.equals(PersistType.SER)){
                     path = "src"+File.separator+"save"+File.separator+filename+".ser";
-                } else {
+                }else{
                     path += "src"+File.separator+"export"+File.separator+filename+".csv";
                 }
                 Persistable<List<Matrix>> persister = getPersister(type);
-                if (persister != null) {
-                    if (!matrixList.isEmpty()) {
+                if(persister != null){
+                    if(!matrixList.isEmpty()){
                         persister.persist(matrixList, path); /*persisterMap.get(type).persist(matrixList, path);
                         same: new PersisterSER<>().persist(matrixList, path);*/
-                    } else {
+                    }else{
                         throw new GraphenException("save() | Empty matirxList!");
                     }
-                } else {
+                }else{
                     throw new GraphenException("save() | Null-Ref at persist/getpersist()!");
                 }
                 //
-            } else {
+            }else{
                 throw new GraphenException("save() | Filename is blank!");
             }
-        } else {
-            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!" : "type!"));
+        }else{
+            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!": "type!"));
         }
     }
 
-    public void persistadjazenzMatrix(Map<Integer, Matrix> adjaMatrix, PersistType type, String filename) throws GraphenException, PersisterException {
+    public void persistadjazenzMatrix(Map<Integer, Matrix> adjaMatrix, PersistType type, String filename) throws GraphenException, PersisterException{
         String path = "";
         int zaehler = 1;
 
-        if (filename != null && type != null) {
-            if (!filename.isBlank()) {
-                if (type.equals(PersistType.SER)) {
+        if(filename != null && type != null){
+            if(!filename.isBlank()){
+                if(type.equals(PersistType.SER)){
                     path = "src"+File.separator+"save"+File.separator+filename+".ser";
-                } else {
+                }else{
                     path += "src"+File.separator+"export"+File.separator+filename+".csv";
                 }
                 Persistable<List<Matrix>> persister = getPersister(type);
-                if (persister != null) {
-                    if (!matrixList.isEmpty()) {
+                if(persister != null){
+                    if(!matrixList.isEmpty()){
                         persister.persist2(adjaMatrix, path); /*persisterMap.get(type).persist(matrixList, path);
                         same: new PersisterSER<>().persist(matrixList, path);*/
-                    } else {
+                    }else{
                         throw new GraphenException("save() | Empty matirxList!");
                     }
-                } else {
+                }else{
                     throw new GraphenException("save() | Null-Ref at persist/getpersist()!");
                 }
                 //
-            } else {
+            }else{
                 throw new GraphenException("save() | Filename is blank!");
             }
-        } else {
-            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!" : "type!"));
+        }else{
+            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!": "type!"));
         }
     }
 
-    public List<Map<Integer, Matrix>> getPotenzMapListe() throws GraphenException {
-        if (!potenzListe.isEmpty()) {
+    public List<Map<Integer, Matrix>> getPotenzMapListe() throws GraphenException{
+        if(!potenzListe.isEmpty()){
             return potenzListe;
-        } else {
+        }else{
             throw new GraphenException("getMapListe | Empty List!");
         }
     }
 
-    public void persistadjazenzMatrixMap(List<Map<Integer, Matrix>> dataMat, PersistType type, String filename) throws GraphenException, PersisterException {
+    public void persistadjazenzMatrixMap(List<Map<Integer, Matrix>> dataMat, PersistType type, String filename) throws GraphenException, PersisterException{
         String path = "";
         int zaehler = 1;
 
-        if (filename != null && type != null) {
-            if (!filename.isBlank()) {
-                if (type.equals(PersistType.SER)) {
+        if(filename != null && type != null){
+            if(!filename.isBlank()){
+                if(type.equals(PersistType.SER)){
                     path = "src"+File.separator+"save"+File.separator+filename+".ser";
-                } else {
+                }else{
                     path += "src"+File.separator+"export"+File.separator+filename+".csv";
                 }
                 Persistable<List<Matrix>> persister = getPersister(type);
-                if (persister != null) {
-                    if (!matrixList.isEmpty()) {
+                if(persister != null){
+                    if(!matrixList.isEmpty()){
                         persister.persist3(dataMat, path); /*persisterMap.get(type).persist(matrixList, path);
                         same: new PersisterSER<>().persist(matrixList, path);*/
-                    } else {
+                    }else{
                         throw new GraphenException("save() | Empty matirxList!");
                     }
-                } else {
+                }else{
                     throw new GraphenException("save() | Null-Ref at persist/getpersist()!");
                 }
                 //
-            } else {
+            }else{
                 throw new GraphenException("save() | Filename is blank!");
             }
-        } else {
-            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!" : "type!"));
+        }else{
+            throw new GraphenException("save() | Null-Ref at "+(filename == null ? "filename!": "type!"));
         }
     }
 
-    public Matrix getWegmatrix() throws GraphenException {
-        if (!matrixList.isEmpty()) {
+    public Matrix getWegmatrix() throws GraphenException{
+        if(!matrixList.isEmpty()){
             int tempZaehler = 1;
             Matrix einMatrix = new Matrix("Weg Matrix", matrixList.get(0).getDimension());
             Map<Integer, Matrix> tempWegMatrix = new HashMap<>();
             List<Map<Integer, Matrix>> adjaWegMatrix = adjazenzmatrix2(0, matrixList.get(0).getDimension());
             //            Matrix mx1 = new Matrix("Weg"+tempZaehler, matrixList.get(0).getDimension());
-            for(int i = 0; i < matrixList.get(0).getDimension(); i++){
-                for(int j = 0; j < matrixList.get(0).getDimension(); j++){
-                    if (i == j) {
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                    if(i == j){
                         einMatrix.setElement(i, j, 1);
                     }
                 }
@@ -1190,13 +1242,13 @@ public class MatrixVerwaltung {
             ArrayList<Matrix> mx2 = new ArrayList<>(List.of(einMatrix));
 
 
-            while (tempZaehler != matrixList.get(0).getDimension()) {
+            while(tempZaehler != matrixList.get(0).getDimension()){
 
-                for(int k = 0; k < matrixList.get(0).getDimension(); k++){
-                    for(int p = 0; p < matrixList.get(0).getDimension(); p++){
-                        if (k != p) {
+                for(int k = 0; k<matrixList.get(0).getDimension(); k++){
+                    for(int p = 0; p<matrixList.get(0).getDimension(); p++){
+                        if(k != p){
                             //                            if (adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p) != 0) {
-                            if (this.adjaMatrix.get(tempZaehler).getElement(k, p) != 0) {
+                            if(this.adjaMatrix.get(tempZaehler).getElement(k, p) != 0){
                                 //                            tempWegMatrix.put(tempZaehler, adjaWegMatrix.get(0).get(tempZaehler).getElement(k,p));
                                 //                                einMatrix.setElement(k, p, adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p));
                                 einMatrix.setElement(k, p, 1);
@@ -1213,23 +1265,73 @@ public class MatrixVerwaltung {
             }
             kompMatrix = einMatrix;
             return einMatrix;
-        } else {
+        }else{
             throw new GraphenException("getWegmatrix | Empty List!");
         }
     }
 
-    public int getComponents() throws GraphenException {
-        if (!matrixList.isEmpty()) {
-            if (kompMatrix != null) {
+
+    //Wegmatrix Berechnung des letztes Matrix-Elementes in der "matrixlist". Weil geslöschter Knoten von entsprechender Matrix ist als Letztes gereiht in der matrixList
+    public Matrix getWegmatrixKomponents() throws GraphenException{
+        if(!matrixList.isEmpty()){
+            int tempZaehler = 1;
+            Matrix einMatrix = new Matrix("Weg Matrix", matrixList.get(matrixList.size()-1).getDimension());
+            Map<Integer, Matrix> tempWegMatrix = new HashMap<>();
+            //            List<Map<Integer, Matrix>> adjaWegMatrix = adjazenzmatrix2(0, matrixList.get(0).getDimension());
+            List<Map<Integer, Matrix>> adjaWegMatrix = adjazenzmatrixKomponents(matrixList.size()-1, matrixList.get(matrixList.size()-1).getDimension());
+            //            Matrix mx1 = new Matrix("Weg"+tempZaehler, matrixList.get(0).getDimension());
+            for(int i = 0; i<matrixList.get(matrixList.size()-1).getDimension(); i++){
+                for(int j = 0; j<matrixList.get(matrixList.size()-1).getDimension(); j++){
+                    if(i == j){
+                        einMatrix.setElement(i, j, 1);
+                    }
+                }
+            }
+            tempWegMatrix.put(tempZaehler, einMatrix);   //initialisieren der Hauptdiagonale
+            ArrayList<Matrix> mx2 = new ArrayList<>(List.of(einMatrix));
+
+
+            while(tempZaehler != matrixList.get(matrixList.size()-1).getDimension()){
+
+                for(int k = 0; k<matrixList.get(matrixList.size()-1).getDimension(); k++){
+                    for(int p = 0; p<matrixList.get(matrixList.size()-1).getDimension(); p++){
+                        if(k != p){
+                            //                            if (adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p) != 0) {
+                            if(this.adjaMatrix.get(tempZaehler).getElement(k, p) != 0){
+                                //                            tempWegMatrix.put(tempZaehler, adjaWegMatrix.get(0).get(tempZaehler).getElement(k,p));
+                                //                                einMatrix.setElement(k, p, adjaWegMatrix.get(0).get(tempZaehler).getElement(k, p));
+                                einMatrix.setElement(k, p, 1);
+                            }
+                        }
+
+                    }
+                }
+
+                //                tempWegMatrix.put(tempZaehler, einMatrix);  /*einMatrix.setElement(i, j, 1);*/
+                //                mx2.add(0, einMatrix);
+
+                tempZaehler++;
+            }
+            kompMatrix2 = einMatrix;
+            return einMatrix;
+        }else{
+            throw new GraphenException("getWegmatrix | Empty List!");
+        }
+    }
+
+    public int getComponents(boolean print) throws GraphenException{
+        if(!matrixList.isEmpty()){
+            getWegmatrix();
+            if(kompMatrix != null){
                 Matrix wegMatrix = kompMatrix;
                 int zeilenLauf = 0;
 
                 List<String> zeilenList = new ArrayList<>();
                 Set<String> zeilenSet = new TreeSet<>();
                 String zeileOne = "";
-                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
                     int[] zeile = new int[matrixList.get(0).getDimension()];
-                    for(int j = 0; j < matrixList.get(0).getDimension(); j++){
+                    for(int j = 0; j<matrixList.get(0).getDimension(); j++){
                         zeile[j] = kompMatrix.getElement(i, j);
                         zeileOne += String.valueOf(kompMatrix.getElement(i, j));
                     }
@@ -1237,55 +1339,173 @@ public class MatrixVerwaltung {
                     zeileOne = "";
 
                 }
-                for(int i = 0; i < matrixList.get(0).getDimension(); i++){
+
+                int setZaehler = 0;
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
                     zeilenSet.add(zeilenList.get(i));
+                    if(zeilenSet.size() != setZaehler){
+
+                    }
+                }
+                this.komponentenAnzahl = zeilenSet.size();
+                if(print){
+                    System.out.println("C(G)= "+this.komponentenAnzahl);
                 }
                 return zeilenSet.size();
-            } else {
+            }else{
                 throw new GraphenException("getComponents | Wegmatrix is still not calculated!");
             }
-        } else {
-            throw new GraphenException("getWegmatrix | Empty List!");
+        }else{
+            throw new GraphenException("getWegmatrix | Empty matrixList!");
+        }
+    }
+
+    public int getComponentsLastMatrix(boolean print) throws GraphenException{
+        if(!matrixList.isEmpty()){
+            getWegmatrixKomponents();
+            if(kompMatrix2 != null){
+                Matrix wegMatrix = kompMatrix2;
+                int zeilenLauf = 0;
+
+                List<String> zeilenList = new ArrayList<>();
+                Set<String> zeilenSet = new TreeSet<>();
+                String zeileOne = "";
+                for(int i = 0; i<matrixList.get(matrixList.size()-1).getDimension(); i++){
+                    int[] zeile = new int[matrixList.get(0).getDimension()];
+                    for(int j = 0; j<matrixList.get(matrixList.size()-1).getDimension(); j++){
+                        zeile[j] = kompMatrix2.getElement(i, j);
+                        zeileOne += String.valueOf(kompMatrix2.getElement(i, j));
+                    }
+                    zeilenList.add(zeileOne);
+                    zeileOne = "";
+
+                }
+
+                int setZaehler = 0;
+                for(int i = 0; i<matrixList.get(matrixList.size()-1).getDimension(); i++){
+                    zeilenSet.add(zeilenList.get(i));
+                    if(zeilenSet.size() != setZaehler){
+
+                    }
+                }
+                this.komponentenAnzahl2 = zeilenSet.size();
+                if(print){
+                    System.out.println("C(G)= "+this.komponentenAnzahl2);
+                }
+                return zeilenSet.size();
+            }else{
+                throw new GraphenException("getComponents | Wegmatrix is still not calculated!");
+            }
+        }else{
+            throw new GraphenException("getWegmatrix | Empty matrixList!");
+        }
+    }
+
+    public int getComponentNumber() throws GraphenException{
+        if(this.komponentenAnzahl != 0){
+            return this.komponentenAnzahl;
+        }else{
+            throw new GraphenException("getComponentNumber | Components are not yet calculated!");
+        }
+    }
+    public int getComponentNumber2() throws GraphenException{
+        if(this.komponentenAnzahl2 != 0){
+            return this.komponentenAnzahl2;
+        }else{
+            throw new GraphenException("getComponentNumber | Components are not yet calculated!");
+        }
+    }
+
+    public void deleteNode(int node) throws GraphenException{
+        if(!matrixList.isEmpty()){
+            Matrix mx = matrixList.get(0);
+            int lauf = 0;
+            int zaehl = 0;
+
+            Map<Integer, int[]> neueListe = new HashMap<>();
+
+            if(node>=1 && node<=matrixList.get(0).getDimension()){
+                for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                    if(i != (node-1)){
+                        int[] reihe = new int[matrixList.get(0).getDimension()-1];
+                        for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                            if(j != (node-1)){
+                                reihe[zaehl] = mx.getElement(i, j);
+                                zaehl++;
+                            }
+                        }
+                        neueListe.put(lauf, reihe);
+                        lauf++;
+                        zaehl = 0;
+                    }
+                }
+
+                lauf = 0;
+
+                deletedMatrix = new Matrix(neueListe.get(0).length);
+                for(int a = 0; a<neueListe.get(0).length; a++){
+                    for(int b = 0; b<neueListe.get(0).length; b++){
+                        deletedMatrix.setElement(a, b, neueListe.get(lauf)[b]);
+                    }
+                    lauf++;
+                }
+                matrixList.add(this.deletedMatrix);
+                //                System.out.println(this.deletedMatrix.toStringCSVMatrix());
+
+            }else{
+                throw new GraphenException("deleteNode | "+(node>matrixList.get(0).getDimension() ? ("Node must be smaler than "+matrixList.get(0).getDimension()): "Node must be bigger than 0"));
+            }
+        }else{
+            throw new GraphenException("deleteNode | Empty matrixList!");
+        }
+    }
+
+    public int getArtikulation() throws GraphenException{
+        if(!matrixList.isEmpty()){
+
+            return 0;
+        }else{
+            throw new GraphenException("getArtikulation | matrix List!");
         }
     }
 
 
-    public void load(PersistType type, String filename) throws GraphenException, PersisterException {
-        if (filename != null && type != null) {
+    public void load(PersistType type, String filename) throws GraphenException, PersisterException{
+        if(filename != null && type != null){
             Persistable<List<Matrix>> persister = getPersister(type);
-            if (persister != null) {
-                try {
+            if(persister != null){
+                try{
                     List<Matrix> matrixList1;
                     matrixList1 = persister.load(filename);
                     matrixList.addAll(matrixList1);
-                } catch(NullPointerException e) {
+                }catch(NullPointerException e){
                     throw new GraphenException("Null-Ref.  returned by load in concrete class! "+e.getMessage(), e);
                 }
-            } else {
+            }else{
                 throw new GraphenException("load() | Null-Ref at persister!");
             }
-        } else {
-            throw new GraphenException("load() | Null-Ref. at "+(type == null ? "type!" : "filename!"));
+        }else{
+            throw new GraphenException("load() | Null-Ref. at "+(type == null ? "type!": "filename!"));
         }
     }
 
-    public Persistable<List<Matrix>> getPersister(PersistType type) {
+    public Persistable<List<Matrix>> getPersister(PersistType type){
         return persisterMap.get(type);
     }
 
 
     @Override
-    public String toString() {
+    public String toString(){
         StringBuilder builder = new StringBuilder();
         builder.append("Normal matrix list: -----------------------------------------\n");
-        for(Matrix mx : matrixList){
+        for(Matrix mx: matrixList){
             builder.append(mx.toStringCSVMatrix()).append(Constants.LINE_BREAK);
         }
 
-        if (!potenzListe.isEmpty()) {
+        if(!potenzListe.isEmpty()){
             builder.append("Potenz matrix list: -----------------------------------------\n");
-            for(int k = 0; k < potenzListe.size(); k++){
-                for(int j = 1; j <= potenzListe.get(k).size(); j++){
+            for(int k = 0; k<potenzListe.size(); k++){
+                for(int j = 1; j<=potenzListe.get(k).size(); j++){
                     builder.append(potenzListe.get(k).get(j).toStringCSVMatrix()).append(Constants.LINE_BREAK);
                 }
             }
@@ -1300,17 +1520,17 @@ public class MatrixVerwaltung {
     }
 
 
-    public String toString2() {
+    public String toString2(){
         StringBuilder builder = new StringBuilder();
         //        builder.append("Normal matrix list: -----------------------------------------\n");
         //        for(Matrix mx: matrixList){
         //            builder.append(mx.toStringCSVMatrix()).append(Constants.LINE_BREAK);
         //        }
 
-        if (!potenzListe.isEmpty()) {
+        if(!potenzListe.isEmpty()){
             builder.append("Potenz matrix list: -----------------------------------------\n");
-            for(int k = 0; k < potenzListe.size(); k++){
-                for(int j = 1; j <= potenzListe.get(k).size(); j++){
+            for(int k = 0; k<potenzListe.size(); k++){
+                for(int j = 1; j<=potenzListe.get(k).size(); j++){
                     builder.append(potenzListe.get(k).get(j).toStringCSVMatrix()).append(Constants.LINE_BREAK);
                 }
             }

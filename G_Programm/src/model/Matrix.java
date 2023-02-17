@@ -167,7 +167,7 @@ public class Matrix implements Serializable, MatrixOperationen{
                     throw new GraphenException("setElement | wert must be between 0 and "+Constants.MATRIX_ELEMENT_WERT_HIGH+"! Your input: "+wert);
                 }
             }else{
-                throw new GraphenException("setElement | i-j must be between 0 and " +  (getDimension()-1));
+                throw new GraphenException("setElement | i-j must be between 0 and " +  (getDimension()-1)+ " | Your input: i: "+pos_i+", j: "+pos_j);
             }
         }else{
             throw new GraphenException("setElement | Dimension must first be set!");
