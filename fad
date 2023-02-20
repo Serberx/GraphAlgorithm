@@ -1,0 +1,95 @@
+[33mcommit ceb75cfb9d19f1a18f7b4197d544e84cdea09246[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Fri Feb 17 06:53:59 2023 +0100
+
+    Berechnung Komponenten und Löschen eines Knotens
+    
+    - getWegmatrix()
+    - getWegmatrixLastMatrix()
+    - getComponents()
+    - getComponentsLastMatrix()
+    - deleteNode()
+    
+    Die Berechnung der Komponenten sowie das Löschen eines Knotens sind wichtige Funktionen innerhalb des Programms. Aktuell gibt es zwei Methoden zur Berechnung der Komponenten, je nachdem ob ein Knoten gelöscht wurde oder nicht. Die Entscheidung zwischen diesen Methoden hängt davon ab, ob der Graph mit oder ohne den gelöschten Knoten betrachtet wird.
+    
+    Beide Methoden rufen automatisch die Weg-Matrizen mit den Methoden "getWegmatrix()" und "getWegmatrixLastMatrix()" auf. Es gibt eine klare Zugehörigkeit zwischen den Methoden, wobei die Methode "getComponents()" zur Methode "getWegmatrix()" gehört und die Methode "getComponentsLastMatrix()" zur Methode "getWegmatrixLastMatrix()" gehört.
+    
+    Aktuell sind alle vier Methoden sowie die beiden Hauptmethoden "getWegmatrix" und "getComponentsLastMatrix" öffentlich zugänglich. Allerdings ist geplant, alle vier Methoden in Zukunft mit nur einer Methode aufzurufen. Hierfür sollen die Access-Modifier der Methoden auf "private" gesetzt werden, damit in Zukunft nur noch eine Methode entscheidet, welche der beiden Methoden zur Berechnung der Komponenten genutzt wird.
+    
+    Des Weiteren soll die Funktionalität erweitert werden, indem es möglich sein wird, einen Knoten zu löschen und den gesamten Graphen neu zu berechnen. Hierfür wurde bereits die Methode "deleteNode()" implementiert. Diese Methode löscht den gewünschten Knoten und berechnet den Graphen neu.
+    
+    Aktuell liegt der Fokus des Programms auf der Funktionalität, weshalb die Gesamtarchitektur noch nicht effizient ist. Sobald das Programm fertiggestellt ist und auch Artikulationen und Brücken implementiert sind, kann mit dem Refactoring des Codes begonnen werden, um die Effizienz und Lesbarkeit des Codes zu verbessern.
+
+[33mcommit 0dbc7a671f5330172f5ed50d1176cc7f8748172c[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Mon Feb 13 02:45:54 2023 +0100
+
+    getComponents()
+    
+    Die Implementierung zu Berechnung der Anzahl eindeutiger Komponenten in
+    einer Matrix erfolgt durch die Verwendung zweier Methoden. Die erste
+    Methode, "getWegmatrix()", stellt die Matrix bereit, während die
+    tatsächliche Berechnung in der zweiten Methode, "getComponents()",
+    durchgeführt wird. Das Ergebnis der Berechnung wird als Rückgabewert des
+    Typs "int" zurückgegeben. Es besteht Überlegung, beide Methoden in einer
+    einzigen Methtode zusammenzuführen, um die Effizienz der Implementierung
+    zu verbessern.
+
+[33mcommit 23e96b8d9ce46519d7c2d14343d4f00ef0017ec2[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Sat Feb 11 06:03:36 2023 +0100
+
+    getWegmatrix
+    
+    Methode getWegmatrix ist nun effizienter. Nächster Schritt, Anzahl der
+    Komponenten von den unterschiedlichen Zeilen errechnen.
+
+[33mcommit 62ff869dd1ef19743331b1ffac4560f0010ba5a9[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Thu Feb 9 03:48:37 2023 +0100
+
+    Wegmatrix
+    
+    GetWegmatrix wurde in MatrixVerwaltung implementiert. Noch nicht
+    effizient aber die Ausgabe entspricht der Wahrheit. Nächster Schritt ist
+    es die Implementierung getWegmatrix zu Optimieren. Danach können die
+    Berechnungen/Implementierungen für die Komponenten vorgenommen
+    werden.
+
+[33mcommit 4a430fa8a1fc8e9b4a82bbc02cbc1ab1107db53b[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Mon Feb 6 19:36:27 2023 +0100
+
+    Änderung: Matrix mit einem Knoten.
+    
+    Matrizen mit nur einem Knoten können jetzt auch geladen werden.
+    Änderungen in PersisterCSV und MatrixVerwaltung.
+
+[33mcommit b3561373c3c196e6b591eae666effe2bd686e853[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Sat Feb 4 04:19:58 2023 +0100
+
+    getZentrum
+    
+    Es wurde getZentrum implementiert und einige Funktionen die als
+    Versuchszwecke dienten und die keine Rolle Spielen wurden ausgeklammert.
+    
+    Des weiteren wurde radius, durchmesser und getExzentritaetVomKnoten mit einem "boolean print" erweitert, sodass man jetzt per true oder false eine zusätzliche System.out.println Ausgabe einleiten kann.
+
+[33mcommit 6f6112de9dcd309593f3ba3b0b5d1793c1dc78d2[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Fri Feb 3 21:13:30 2023 +0100
+
+    vor dem cleanup des codes, ex(x), dm(G), rad(G)
+
+[33mcommit dfb4500c712c9492f333ce98fd03b75db93af0b2[m
+Author: Savas Kuzu <kuz14544@spengergasse.at>
+Date:   Fri Feb 3 03:11:32 2023 +0100
+
+    vor dem löschen von lamda Übungen
+
+[33mcommit 81963da41edeaba6c90e4bdc57e649987a68b329[m
+Author: Serberx <47865435+Serberx@users.noreply.github.com>
+Date:   Fri Feb 3 02:49:05 2023 +0100
+
+    Initial commit

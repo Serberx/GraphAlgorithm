@@ -8,7 +8,6 @@ import persister.PersisterException;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /*
             IN DIESER KLASSE WERDEN DIE MATRIZEN GELADEN UND VERWALTET.
@@ -1272,7 +1271,7 @@ public class MatrixVerwaltung{
 
 
     //Wegmatrix Berechnung des letztes Matrix-Elementes in der "matrixlist". Weil geslöschter Knoten von entsprechender Matrix ist als Letztes gereiht in der matrixList
-    public Matrix getWegmatrixKomponents() throws GraphenException{
+    public Matrix getWegmatrixLastMatrix() throws GraphenException{
         if(!matrixList.isEmpty()){
             int tempZaehler = 1;
             Matrix einMatrix = new Matrix("Weg Matrix", matrixList.get(matrixList.size()-1).getDimension());
@@ -1362,7 +1361,7 @@ public class MatrixVerwaltung{
 
     public int getComponentsLastMatrix(boolean print) throws GraphenException{
         if(!matrixList.isEmpty()){
-            getWegmatrixKomponents();
+            getWegmatrixLastMatrix();
             if(kompMatrix2 != null){
                 Matrix wegMatrix = kompMatrix2;
                 int zeilenLauf = 0;
@@ -1371,7 +1370,7 @@ public class MatrixVerwaltung{
                 Set<String> zeilenSet = new TreeSet<>();
                 String zeileOne = "";
                 for(int i = 0; i<matrixList.get(matrixList.size()-1).getDimension(); i++){
-                    int[] zeile = new int[matrixList.get(0).getDimension()];
+                    int[] zeile = new int[matrixList.get(matrixList.size()-1).getDimension()];
                     for(int j = 0; j<matrixList.get(matrixList.size()-1).getDimension(); j++){
                         zeile[j] = kompMatrix2.getElement(i, j);
                         zeileOne += String.valueOf(kompMatrix2.getElement(i, j));
@@ -1408,6 +1407,7 @@ public class MatrixVerwaltung{
             throw new GraphenException("getComponentNumber | Components are not yet calculated!");
         }
     }
+
     public int getComponentNumber2() throws GraphenException{
         if(this.komponentenAnzahl2 != 0){
             return this.komponentenAnzahl2;
@@ -1460,10 +1460,23 @@ public class MatrixVerwaltung{
         }
     }
 
-    public int getArtikulation() throws GraphenException{
+    public void getArtikulation() throws GraphenException{
         if(!matrixList.isEmpty()){
+            int[] artikulation = new int[matrixList.get(0).getDimension()];
+            int kompAnzahl = getComponents(false);
+            int zaehl = 0;
 
-            return 0;
+            for(int i = 1; i<=matrixList.get(0).getDimension(); i++){
+                deleteNode(i);
+                int geloeschtKomponente = getComponentsLastMatrix(false);
+
+                if(geloeschtKomponente>kompAnzahl){
+                    artikulation[zaehl] = i;
+                    System.out.println(artikulation[zaehl]);
+                    zaehl++;
+                }
+            }
+
         }else{
             throw new GraphenException("getArtikulation | matrix List!");
         }

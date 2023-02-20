@@ -241,7 +241,7 @@ public class FinalTests{
 //         System.out.println(mv1.getMatrixList().get(mv1.getMatrixList().size()-1));
 
          mv1.deleteNode(11);
-         System.out.println(mv1.getWegmatrixKomponents());
+         System.out.println(mv1.getWegmatrixLastMatrix());
          System.out.println(mv1.getComponentsLastMatrix(true));
 //         mv1.getComponentsLastMatrix(true);
      }catch(GraphenException e){
@@ -258,9 +258,36 @@ public class FinalTests{
          MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
          mv1.load(PersistType.CSV, "src/export/SU_Graph001.csv");
 //         System.out.println(mv1.getWegmatrix());
-         mv1.deleteNode(4);
+//         mv1.deleteNode(5);
+//         System.out.println(mv1.toString());
 //         mv1.getComponents(true);
          mv1.getComponentsLastMatrix(true);
+         System.out.println(mv1.getMatrixList().get(0));
+         mv1.getComponents(true);
+         System.out.println(mv1.getMatrixList().get(mv1.getMatrixList().size()-1));
+     }catch(GraphenException e){
+         System.out.println(e.getMessage());
+         e.printStackTrace();
+     }catch(PersisterException e){
+         throw new RuntimeException(e);
+     }
+    }
+
+    @Test
+    public void TestWegKomponents2(){
+     try{
+         MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
+         mv1.load(PersistType.CSV, "src/export/SU_Graph001.csv");
+
+//         System.out.println(mv1.getWegmatrix());                //(muss nicht aufgerufen werden, getComponents() ruft automatisch auf) Wegmatrix berechnen | 1. Element aus der matrixList
+//         System.out.println(mv1.getComponents(true));     //Komponenten aus matrixList, ohne Knoten löschen.
+
+
+//         mv1.deleteNode(3);                                     //Knoten Löschen, um Artikulation v Komponentenanzahl zu erhöhen. Funktioniert nur in Verbindung mit getComponentsLastMatrix und der abhängigen Methode getWegmatrixLastMatrix.
+                                                                //Wenn ein Knoten gelöscht wird, dann nur mit den Methoden die "last" im Namen haben berechnen. Weil die neuberechnete Matrix in der matrixList hinten angestellt wird.
+//         System.out.println(mv1.getWegmatrixLastMatrix());      //(muss nicht aufgerufen werden, getComponentsLastMatrix() ruft automatisch auf)
+//         System.out.println(mv1.getComponentsLastMatrix(true));
+         mv1.getArtikulation();
      }catch(GraphenException e){
          System.out.println(e.getMessage());
          e.printStackTrace();
