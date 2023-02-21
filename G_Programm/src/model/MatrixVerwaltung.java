@@ -301,8 +301,6 @@ public class MatrixVerwaltung{
             throw new GraphenException("adjazenzmatrix | Empty matrix list!");
         }
         potenzListe.add(adjaMatrix);
-
-
     }
 
     /*
