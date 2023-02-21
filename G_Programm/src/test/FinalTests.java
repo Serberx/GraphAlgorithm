@@ -7,7 +7,15 @@ import model.MatrixVerwaltung;
 import org.junit.Test;
 import persister.PersisterException;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
+import javax.swing.plaf.FileChooserUI;
+import javax.swing.plaf.basic.BasicFileChooserUI;
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 public class FinalTests{
 
@@ -278,6 +286,7 @@ public class FinalTests{
      try{
          MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
          mv1.load(PersistType.CSV, "src/export/SU_Graph001.csv");
+//         FileChooserUI fid = new BasicFileChooserUI();
 
 //         System.out.println(mv1.getWegmatrix());                //(muss nicht aufgerufen werden, getComponents() ruft automatisch auf) Wegmatrix berechnen | 1. Element aus der matrixList
 //         System.out.println(mv1.getComponents(true));     //Komponenten aus matrixList, ohne Knoten löschen.
@@ -287,7 +296,14 @@ public class FinalTests{
                                                                 //Wenn ein Knoten gelöscht wird, dann nur mit den Methoden die "last" im Namen haben berechnen. Weil die neuberechnete Matrix in der matrixList hinten angestellt wird.
 //         System.out.println(mv1.getWegmatrixLastMatrix());      //(muss nicht aufgerufen werden, getComponentsLastMatrix() ruft automatisch auf)
 //         System.out.println(mv1.getComponentsLastMatrix(true));
-         mv1.getArtikulation();
+
+//         mv1.radius(true);
+//         mv1.durchmesser(true);
+//        mv1.getZentrum();
+        mv1.getArtikulation();
+//         mv1.getArtikulation();
+
+
      }catch(GraphenException e){
          System.out.println(e.getMessage());
          e.printStackTrace();
@@ -295,4 +311,29 @@ public class FinalTests{
          throw new RuntimeException(e);
      }
     }
+
+
+ @Test
+    public void testArtik(){
+     try{
+         MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
+         mv1.load(PersistType.CSV, "src/export/SU_Graph001.csv");
+         System.out.println(mv1.toString());
+//         mv1.getWegmatrixLastMatrix();
+
+         mv1.getArtikulation();
+         System.out.println("========================================================");
+         System.out.println(mv1.toString());
+
+     }catch(GraphenException e){
+         System.out.println(e.getMessage());
+         e.printStackTrace();
+     }catch(PersisterException e){
+         throw new RuntimeException(e);
+     }
+    }
+
+
+
+
 }

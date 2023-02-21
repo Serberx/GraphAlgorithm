@@ -1312,6 +1312,7 @@ public class MatrixVerwaltung{
                 tempZaehler++;
             }
             kompMatrix2 = einMatrix;
+            potenzListe.remove(1);
             return einMatrix;
         }else{
             throw new GraphenException("getWegmatrix | Empty List!");
@@ -1475,6 +1476,7 @@ public class MatrixVerwaltung{
                     System.out.println(artikulation[zaehl]);
                     zaehl++;
                 }
+                matrixList.remove(matrixList.size()-1);
             }
 
         }else{
