@@ -9,11 +9,6 @@ import persister.PersisterException;
 import java.io.File;
 import java.util.*;
 
-/*
-            IN DIESER KLASSE WERDEN DIE MATRIZEN GELADEN UND VERWALTET.
-            NACH DEM LADEN, WERDEN DIE DATEN WEITER IN DIE MATRIX KLASSE GELEITET.
- */
-
 public class MatrixVerwaltung{
     private String name;
     private List<Matrix> matrixList;
@@ -21,7 +16,7 @@ public class MatrixVerwaltung{
     private Matrix kompMatrix;
     private Matrix kompMatrix2;
     private Matrix deletedMatrix;
-    private Map<PersistType, Persistable<List<Matrix>>> persisterMap;       ////////// 1    Context class
+    private Map<PersistType, Persistable<List<Matrix>>> persisterMap;
     //    private Persistable<List<Matrix>> matrixPersister;
     private List<Map<Integer, Matrix>> potenzListe;
     private List<Map<Integer, Matrix>> distanzListe;
@@ -36,7 +31,7 @@ public class MatrixVerwaltung{
     public MatrixVerwaltung(String name) throws GraphenException{
         setName(name);
         matrixList = new ArrayList<>();
-        initPersister();                                                    ////////// 3
+        initPersister();
         adjaMatrix = new HashMap<>();
         potenzListe = new ArrayList<>();
         distanzListe = new ArrayList<>();
@@ -45,13 +40,13 @@ public class MatrixVerwaltung{
     public MatrixVerwaltung() throws GraphenException{
         setName("-default-");
         matrixList = new ArrayList<>();
-        initPersister();                                                    ////////// 3
+        initPersister();
         adjaMatrix = new HashMap<>();
         potenzListe = new ArrayList<>();
         distanzListe = new ArrayList<>();
     }
 
-    private void initPersister(){                                            ////////// 2
+    private void initPersister(){
         persisterMap = new HashMap<>();
         persisterMap.put(PersistType.SER, new PersisterSER<>());
         persisterMap.put(PersistType.CSV, new PersisterCSV());
@@ -62,8 +57,7 @@ public class MatrixVerwaltung{
         return name;
     }
 
-    public List<Matrix> getMatrixList(){        //Bei get getListe() Methode braucht es unbedingt eine toString der
-        // Model-Klasse, sonst gibt die Verwaltungsklasse keine Liste aus. Ausgabe like adklfj@12312
+    public List<Matrix> getMatrixList(){
         return matrixList;
     }
 
@@ -96,7 +90,7 @@ public class MatrixVerwaltung{
         }
     }
 
-    public Matrix getMatrix(int pos) throws GraphenException{ //todo
+    public Matrix getMatrix(int pos) throws GraphenException{
         if(pos>=0 && pos<=matrixList.size()){
             if(!matrixList.isEmpty()){
                 return matrixList.get(pos);
@@ -237,8 +231,7 @@ public class MatrixVerwaltung{
     }
 
 
-    public int[] knotenGradLineSelect(boolean print, int line) throws GraphenException{  //TODO Schlingen in die Berechnung
-        // einbeziehen!
+    public int[] knotenGradLineSelect(boolean print, int line) throws GraphenException{  //TODO Schlingen in die Berechnung einbeziehen!
         int[] tempDegreeList = new int[0];
         if(line>=1){
             int zaehler = 0;

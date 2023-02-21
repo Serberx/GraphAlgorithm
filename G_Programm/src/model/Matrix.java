@@ -8,9 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-/*
-        In dieser Klasse findet die Zuweisung der Daten in die Matrix statt
- */
+
 public class Matrix implements Serializable, MatrixOperationen{
 
     private String name;
