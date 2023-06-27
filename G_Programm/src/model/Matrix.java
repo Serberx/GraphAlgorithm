@@ -201,6 +201,18 @@ public class Matrix implements Serializable, MatrixOperationen{
         return builder.toString();
     }
 
+    public String toStringCSVMatrix2(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.name).append(";").append(this.dimension).append(";").append("x").append(";").append(this.dimension).append("\n");
+        for(int i = 0; i < matrixArray.length; i++){
+            for(int k = 0; k < matrixArray[i].length; k++){
+                builder.append(matrixArray[i][k]).append("\t");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+
     @Override       //DONE
     public String toString(){
         StringBuilder builder = new StringBuilder();

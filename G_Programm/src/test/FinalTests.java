@@ -332,8 +332,27 @@ public class FinalTests{
          throw new RuntimeException(e);
      }
     }
+    @Test
+public void testArtik2(){
+        try{
+            MatrixVerwaltung matrixVerwaltung = new MatrixVerwaltung("Name");
+            matrixVerwaltung.load(PersistType.CSV,"src/export/SU_Graph001.csv" );
+//            System.out.println(matrixVerwaltung.getExzentritaetVomKnoten(false, 1));;
+//            matrixVerwaltung.getExzentritaetVomKnoten(true, 1);
 
+//            matrixVerwaltung.getComponents(true);
+            matrixVerwaltung.getComponentsLastMatrix(true);
+//            matrixVerwaltung.getComponentsLastMatrix(true);
+//            System.out.println(matrixVerwaltung.exzentritaeten().get(0));
 
+//            matrixVerwaltung.getArtikulation();
+        }catch(GraphenException e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }catch(PersisterException e){
+            throw new RuntimeException(e);
+        }
+}
 
 
 }

@@ -1,8 +1,11 @@
 package test;
 
+import enumerations.PersistType;
 import exception.GraphenException;
 import model.Matrix;
+import model.MatrixVerwaltung;
 import org.junit.Test;
+import persister.PersisterException;
 
 public class TestMatrixErzeugen{
   @Test
@@ -45,5 +48,23 @@ public class TestMatrixErzeugen{
       e.printStackTrace();
     }
     assert (exceptionThrown);
+  }
+
+  @Test
+  public void testSchulGraf001(){
+    try{
+      MatrixVerwaltung mv = new MatrixVerwaltung();
+      mv.load(PersistType.CSV, "src/export/Test_Demo2.csv");
+//      mv.getZentrum();
+//      mv.exzentritaeten();
+      mv.radius(true);
+//      mv.distanzMatrix3();
+    }catch(GraphenException e){
+      System.out.println(e.getMessage());
+      e.getStackTrace();
+    }catch(PersisterException e){
+      System.out.println(e.getMessage());
+      e.getStackTrace();
+    }
   }
 }

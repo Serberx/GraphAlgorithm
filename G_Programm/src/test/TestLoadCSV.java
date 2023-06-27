@@ -1970,6 +1970,18 @@ public class TestLoadCSV{
         }
     }
 
+    @Test
+    public void testTes001(){
+        try{
+            MatrixVerwaltung mv1 = new MatrixVerwaltung("Verwaltung 1");
+            mv1.load(PersistType.CSV, "src/export/Test_Demo2.csv");
+            mv1.getZentrum();
+
+        }catch(GraphenException|PersisterException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 }
 

@@ -8,6 +8,7 @@ import persister.PersisterException;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
             IN DIESER KLASSE WERDEN DIE MATRIZEN GELADEN UND VERWALTET.
@@ -1051,7 +1052,7 @@ public class MatrixVerwaltung{
             throw new GraphenException("getExzentritätVomKnoten | Empty matrixList!");
         }
         if(print){
-            System.out.println("d(G)= "+tempRad);
+            System.out.println("r(G)= "+tempRad);
         }
         this.radius = tempRad;
         return tempRad;
@@ -1270,7 +1271,7 @@ public class MatrixVerwaltung{
     }
 
 
-    //Wegmatrix Berechnung des letztes Matrix-Elementes in der "matrixlist". Weil geslöschter Knoten von entsprechender Matrix ist als Letztes gereiht in der matrixList
+    //Wegmatrix Berechnung des letztes Matrix-Elementes in der "matrixlist". Weil geslöschter Knoten von entsprechender Matrix, ist als Letztes gereiht in der matrixList
     public Matrix getWegmatrixLastMatrix() throws GraphenException{
         if(!matrixList.isEmpty()){
             int tempZaehler = 1;
@@ -1344,9 +1345,16 @@ public class MatrixVerwaltung{
                 for(int i = 0; i<matrixList.get(0).getDimension(); i++){
                     zeilenSet.add(zeilenList.get(i));
                     if(zeilenSet.size() != setZaehler){
-
+                        //TODO
                     }
                 }
+                //                int[] test = new int[matrixList.get(0).getDimension()];
+                //                Matrix mat = getWegmatrix();
+                //                for(int i = 0; i>matrixList.get(0).getDimension(); i++){
+                //                    for(int k = 0; k>matrixList.get(0).getDimension(); k++){
+                //                        m
+                //                    }
+                //                }
                 this.komponentenAnzahl = zeilenSet.size();
                 if(print){
                     System.out.println("C(G)= "+this.komponentenAnzahl);
@@ -1461,6 +1469,8 @@ public class MatrixVerwaltung{
         }
     }
 
+
+
     public void getArtikulation() throws GraphenException{
         if(!matrixList.isEmpty()){
             int[] artikulation = new int[matrixList.get(0).getDimension()];
@@ -1477,11 +1487,64 @@ public class MatrixVerwaltung{
                     zaehl++;
                 }
                 matrixList.remove(matrixList.size()-1);
+                int a = matrixList.size();
+                matrixList.stream().map(ab -> matrixList.get(a-1)).collect(Collectors.toList());
             }
+            //            matrixList.stream().forEach(a->deleteNode(i++));
+        }else{
+            throw new GraphenException("getArtikulation | matrix List!");
+        }
+    }
+
+    public void getBruecken() throws GraphenException{
+        if(!matrixList.isEmpty()){
+            int lauf = 0;
+            int zaehl = 0;
+            int halbLauf = 0;
+            Matrix mx = new Matrix(matrixList.get(0).getDimension());
+
+//            while(lauf < matrixList.get(0).getDimension()){
+
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                    mx.setElement(i, j, matrixList.get(0).getElement(i, j));
+                }
+            }
+
+
+            //            Map<Integer, int[]>
+            int komponentenAnzahl = getComponents(false);
+
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = halbLauf; j<matrixList.get(0).getDimension(); j++){
+                    if(i != j){
+                        if(mx.getElement(i, j) != 0){
+                            mx.setElement(i, j, 0);
+                            mx.setElement(j, i, 0);
+                            matrixList.add(mx);
+                            int komponentAnzahlNew = getComponentsLastMatrix(false);
+                            if(komponentAnzahlNew>komponentenAnzahl){
+                                System.out.println("Brücke: ["+(i+1)+", "+(j+1)+"]");
+                            }
+
+                            mx.setElement(i, j, 1);
+                            mx.setElement(j, i, 1);
+                            matrixList.remove(matrixList.size()-1);
+                        }
+                    }
+                }
+                halbLauf++;
+            }
+            lauf++;
+//        }
 
         }else{
             throw new GraphenException("getArtikulation | matrix List!");
         }
+    }
+
+    public void getComponentenAnzahl(){
+
     }
 
 

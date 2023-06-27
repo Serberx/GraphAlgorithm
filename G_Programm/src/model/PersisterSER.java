@@ -29,6 +29,7 @@ public class PersisterSER<S> implements Persistable<S>{
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))){
             S data;
             data = (S) ois.readObject();
+
             return data;
             //            return (S) ois.readObject();
         }catch(FileNotFoundException e){
