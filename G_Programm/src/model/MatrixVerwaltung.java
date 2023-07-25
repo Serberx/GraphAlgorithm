@@ -308,7 +308,9 @@ public class MatrixVerwaltung{
         }else{
             throw new GraphenException("adjazenzmatrix | Empty matrix list!");
         }
-        potenzListe.add(adjaMatrix);
+        if(potenzListe.size()< 1){
+            potenzListe.add(adjaMatrix);
+        }
 
 
     }
@@ -348,7 +350,9 @@ public class MatrixVerwaltung{
                         adjaMatrix.put(laufVariable+1, mx);
                         laufVariable++;
                     }
-                    potenzListe.add(adjaMatrix);
+                    if(potenzListe.size()<1){
+                        potenzListe.add(adjaMatrix);
+                    }
                     //                    }
                 }else{
                     throw new GraphenException("Power of Potenzmatrix must be between 0 and 100! Your input: "+pot);
@@ -396,7 +400,10 @@ public class MatrixVerwaltung{
                         adjaMatrix.put(laufVariable+1, mx);
                         laufVariable++;
                     }
-                    potenzListe.add(adjaMatrix);
+                    if(potenzListe.size()<1){
+                        potenzListe.add(adjaMatrix);
+                    }
+
                     //                    }
                 }else{
                     throw new GraphenException("Power of Potenzmatrix must be between 0 and 100! Your input: "+pot);
@@ -886,6 +893,7 @@ public class MatrixVerwaltung{
             if(!distanzListe.isEmpty()){  //Zum Testen wurde in dieser Methode die distanzMatrix3() abgewählt und die
                 // distanzListe erzeugt, sonst NullPointerException!
 
+//                if(getComponents(false)>1){
                 if(matrixList.get(0).getDimension()>1){
                     for(int i = 1; i<matrixList.get(0).getDimension()+1; i++){
                         for(int j = 1; j<matrixList.get(0).getDimension()+1; j++){
@@ -917,7 +925,9 @@ public class MatrixVerwaltung{
                 }else{
                     throw new GraphenException("exzentritäten | Exzentrität von Matix ist unendlich!");
                 }
-
+//            }else{
+//                    throw new GraphenException("Nicht Zusammenhängender Graph! Exzentrität für alle Knoten Unendlich!");
+//                }
 
             }else{
                 throw new GraphenException("exzentritäten | Empty distanzList!");
@@ -1264,6 +1274,8 @@ public class MatrixVerwaltung{
                 tempZaehler++;
             }
             kompMatrix = einMatrix;
+//            kompMatrix2 = einMatrix;
+//            potenzListe.remove(1);
             return einMatrix;
         }else{
             throw new GraphenException("getWegmatrix | Empty List!");
@@ -1313,7 +1325,7 @@ public class MatrixVerwaltung{
                 tempZaehler++;
             }
             kompMatrix2 = einMatrix;
-            potenzListe.remove(1);
+//            potenzListe.remove(1);
             return einMatrix;
         }else{
             throw new GraphenException("getWegmatrix | Empty List!");
@@ -1535,18 +1547,93 @@ public class MatrixVerwaltung{
                 }
                 halbLauf++;
             }
-            lauf++;
+//            lauf++;
 //        }
 
         }else{
-            throw new GraphenException("getArtikulation | matrix List!");
+            throw new GraphenException("getBrücken | matrix List!");
         }
+    }
+
+    public int getBrueckenAnzahl(boolean print) throws GraphenException{
+        if(!matrixList.isEmpty()){
+            int lauf = 0;
+            int zaehl = 0;
+            int anzahlBruecken = 0;
+            int halbLauf = 0;
+            Matrix mx = new Matrix(matrixList.get(0).getDimension());
+
+//            while(lauf < matrixList.get(0).getDimension()){
+
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = 0; j<matrixList.get(0).getDimension(); j++){
+                    mx.setElement(i, j, matrixList.get(0).getElement(i, j));
+                }
+            }
+
+
+            //            Map<Integer, int[]>
+            int komponentenAnzahl = getComponents(false);
+
+            for(int i = 0; i<matrixList.get(0).getDimension(); i++){
+                for(int j = halbLauf; j<matrixList.get(0).getDimension(); j++){
+                    if(i != j){
+                        if(mx.getElement(i, j) != 0){
+                            mx.setElement(i, j, 0);
+                            mx.setElement(j, i, 0);
+                            matrixList.add(mx);
+                            int komponentAnzahlNew = getComponentsLastMatrix(false);
+                            if(komponentAnzahlNew>komponentenAnzahl){
+                                if(print){
+                                    System.out.println("Brücke: ["+(i+1)+", "+(j+1)+"]");
+                                }
+                                anzahlBruecken++;
+                            }
+
+                            mx.setElement(i, j, 1);
+                            mx.setElement(j, i, 1);
+                            matrixList.remove(matrixList.size()-1);
+                        }
+                    }
+                }
+                halbLauf++;
+            }
+//            lauf++;
+//        }
+
+            return anzahlBruecken;
+        }else{
+            throw new GraphenException("getBrücken | matrix List!");
+        }
+    }
+
+    public boolean getBaum() throws GraphenException{
+        if(!matrixList.isEmpty()){
+            if(getBrueckenAnzahl(false) == matrixList.get(0).getDimension()-1){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getComponentenAnzahl(){
 
     }
 
+    public void dfsRecursive( int node) throws GraphenException{
+        Matrix adja = matrixList.get(0);
+
+        boolean[] visit = new boolean[adja.getDimension()];
+        System.out.println("Visited "+node);
+        visit[node] = true;
+
+        for(int i = 0; i<adja.getDimension(); i++){
+            if(adja.getElement(node,i) == 1 && !visit[i]){
+                dfsRecursive(i);
+            }
+
+        }
+    }//TODO
 
     public void load(PersistType type, String filename) throws GraphenException, PersisterException{
         if(filename != null && type != null){
@@ -1577,17 +1664,17 @@ public class MatrixVerwaltung{
         StringBuilder builder = new StringBuilder();
         builder.append("Normal matrix list: -----------------------------------------\n");
         for(Matrix mx: matrixList){
-            builder.append(mx.toStringCSVMatrix()).append(Constants.LINE_BREAK);
+            builder.append(mx.toStringCSVMatrix2()).append(Constants.LINE_BREAK);
         }
 
-        if(!potenzListe.isEmpty()){
+        /*if(!potenzListe.isEmpty()){
             builder.append("Potenz matrix list: -----------------------------------------\n");
             for(int k = 0; k<potenzListe.size(); k++){
                 for(int j = 1; j<=potenzListe.get(k).size(); j++){
                     builder.append(potenzListe.get(k).get(j).toStringCSVMatrix()).append(Constants.LINE_BREAK);
                 }
             }
-        }
+        }*/
 
         //        if(!adjaMatrix.isEmpty()){
         //            for(int i = 1; i < adjaMatrix.size(); i++){
@@ -1609,7 +1696,7 @@ public class MatrixVerwaltung{
             builder.append("Potenz matrix list: -----------------------------------------\n");
             for(int k = 0; k<potenzListe.size(); k++){
                 for(int j = 1; j<=potenzListe.get(k).size(); j++){
-                    builder.append(potenzListe.get(k).get(j).toStringCSVMatrix()).append(Constants.LINE_BREAK);
+                    builder.append(potenzListe.get(k).get(j).toStringCSVMatrix2()).append(Constants.LINE_BREAK);
                 }
             }
         }
