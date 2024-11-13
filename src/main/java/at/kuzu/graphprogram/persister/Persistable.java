@@ -1,5 +1,6 @@
 package at.kuzu.graphprogram.persister;
 
+import at.kuzu.graphprogram.exception.PersisterException;
 import at.kuzu.graphprogram.model.Matrix;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import at.kuzu.graphprogram.constants.Constants;
 import at.kuzu.graphprogram.enumerations.PersistType;
 import at.kuzu.graphprogram.exception.GraphenException;
 import at.kuzu.graphprogram.persister.Persistable;
-import at.kuzu.graphprogram.persister.PersisterException;
+import at.kuzu.graphprogram.exception.PersisterException;
 
 import java.io.File;
 import java.util.*;

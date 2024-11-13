@@ -2,11 +2,8 @@ package at.kuzu.graphprogram.model;
 
 import at.kuzu.graphprogram.exception.GraphenException;
 import at.kuzu.graphprogram.persister.Persistable;
-import at.kuzu.graphprogram.persister.PersisterException;
-
+import at.kuzu.graphprogram.exception.PersisterException;
 import at.kuzu.graphprogram.constants.Constants;
-import at.kuzu.graphprogram.persister.Persistable;
-import at.kuzu.graphprogram.persister.PersisterException;
 
 import java.io.*;
 import java.util.ArrayList;

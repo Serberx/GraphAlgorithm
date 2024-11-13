@@ -6,9 +6,7 @@ import at.kuzu.graphprogram.exception.GraphenException;
 import at.kuzu.graphprogram.model.Matrix;
 import at.kuzu.graphprogram.model.MatrixVerwaltung;
 import org.junit.jupiter.api.Test;
-import at.kuzu.graphprogram.persister.PersisterException;
-import org.yaml.snakeyaml.scanner.Constant;
-
+import at.kuzu.graphprogram.exception.PersisterException;
 import java.io.File;
 
 public class FinalTests{

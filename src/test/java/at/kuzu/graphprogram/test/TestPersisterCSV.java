@@ -5,7 +5,9 @@ import at.kuzu.graphprogram.exception.GraphenException;
 import at.kuzu.graphprogram.model.MatrixVerwaltung;
 import at.kuzu.graphprogram.model.Matrix;
 import org.junit.Test;
-import at.kuzu.graphprogram.persister.PersisterException;
+
+import at.kuzu.graphprogram.exception.PersisterException;
+
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,8 @@
 package at.kuzu.graphprogram.model;
 
 import at.kuzu.graphprogram.persister.Persistable;
-import at.kuzu.graphprogram.persister.PersisterException;
-
+import at.kuzu.graphprogram.exception.PersisterException;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

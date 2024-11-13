@@ -2,11 +2,10 @@ package at.kuzu.graphprogram.test;
 
 import at.kuzu.graphprogram.enumerations.PersistType;
 import at.kuzu.graphprogram.exception.GraphenException;
-import at.kuzu.graphprogram.model.DirectoryCreation;
 import at.kuzu.graphprogram.model.Matrix;
 import at.kuzu.graphprogram.model.MatrixVerwaltung;
 import org.junit.Test;
-import at.kuzu.graphprogram.persister.PersisterException;
+import at.kuzu.graphprogram.exception.PersisterException;
 
 public class TestPersisterSER{
 

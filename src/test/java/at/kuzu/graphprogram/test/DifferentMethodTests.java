@@ -1,8 +1,8 @@
-package test;
+package at.kuzu.graphprogram.test;
 
 import org.junit.Test;
 
-public class TestDifferentMethods{
+public class DifferentMethodTests{
 
 
     @Test

@@ -1,4 +1,4 @@
-package persister;
+package at.kuzu.graphprogram.exception;
 
 public class PersisterException extends Exception{
     public PersisterException(String message){
